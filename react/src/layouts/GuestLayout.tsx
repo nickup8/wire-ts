@@ -27,7 +27,7 @@ export const GuestLayout = () => {
         await csrfToken();
         try {
             const resp = await axiosClient.post("/login", {
-                email: getValues("email"),
+                login: getValues("login"),
                 password: getValues("password"),
             });
             if (resp.status === 200) {
@@ -80,7 +80,7 @@ export const GuestLayout = () => {
                             fullWidth
                             sx={{ mb: 2 }}
                             label="Логин"
-                            {...register("email", {
+                            {...register("login", {
                                 required: "Логин обязательный",
                             })}
                         />

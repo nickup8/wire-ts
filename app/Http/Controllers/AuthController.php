@@ -19,8 +19,9 @@ class AuthController extends Controller
 
         $user = User::create([
             'name' => $data['name'],
-            'email' => $data['email'],
+            'login' => $data['login'],
             'password' => Hash::make($data['password']),
+            'rule_id' => $data['rule_id'],
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -37,7 +38,7 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        $user = User::where('email', $data['email'])->first();
+        $user = User::where('login', $data['login'])->first();
 
         if (!$user || !Hash::check($data['password'], $user->password)) {
             return response()->json([

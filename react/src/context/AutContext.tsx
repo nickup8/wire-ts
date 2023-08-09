@@ -10,6 +10,7 @@ import { axiosClient } from "../axiosClient";
 
 type User = {
     name: string;
+    rule_id: number;
 };
 
 interface AuthContentDefault {
