@@ -8,7 +8,7 @@ import {
 } from "react";
 import { axiosClient } from "../axiosClient";
 
-type User = {
+export type User = {
     name: string;
     rule_id: number;
 };
