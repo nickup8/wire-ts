@@ -6,6 +6,7 @@ import { Users } from "./components/Users/Users";
 import { ErrorPage } from "./layouts/ErrorPage";
 import { Logistic } from "./layouts/Logistic";
 import { Dashboard } from "./components/Dashboard/Dashboard";
+import { NewUser } from "./components/Users/NewUser";
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
                 <Route path="/" element={<Logistic />}>
                     <Route index path="/" element={<Dashboard />} />
                     <Route path="/users" element={<Users />} />
+                    <Route path="/users/new" element={<NewUser />} />
                 </Route>
             </Route>
             <Route path="*" element={<ErrorPage />} />
