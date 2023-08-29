@@ -13,7 +13,10 @@ import {
     styled,
     tableCellClasses,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { axiosClient } from "../../axiosClient";
+import { User } from "../../context/AutContext";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -36,6 +39,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const Users = () => {
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        try {
+            axiosClient("/users").then((data) => {
+                setUsers(data.data.data);
+            });
+        } catch (error) {}
+    }, []);
     return (
         <Paper sx={{ p: 4 }}>
             <Box
@@ -58,101 +70,62 @@ export const Users = () => {
                 <Table aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell align="center">
+                            <StyledTableCell
+                                align="center"
+                                sx={{ fontSize: "18px" }}
+                            >
                                 Имя
                             </StyledTableCell>
-                            <StyledTableCell align="center">
+                            <StyledTableCell
+                                align="center"
+                                sx={{ fontSize: "18px" }}
+                            >
                                 Роль
                             </StyledTableCell>
-                            <StyledTableCell align="center">
+                            <StyledTableCell
+                                align="center"
+                                sx={{ fontSize: "18px" }}
+                            >
                                 Дата создания
                             </StyledTableCell>
-                            <StyledTableCell align="center">
+                            <StyledTableCell
+                                align="center"
+                                sx={{ fontSize: "18px" }}
+                            >
                                 Действия
                             </StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <StyledTableRow>
-                            <StyledTableCell
-                                align="center"
-                                component="th"
-                                scope="row"
-                            >
-                                Сироткин Николай
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                                Logistik
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                                {new Date().getFullYear()}
-                            </StyledTableCell>
-                            <StyledTableCell align="center"></StyledTableCell>
-                        </StyledTableRow>
-                        <StyledTableRow>
-                            <StyledTableCell
-                                align="center"
-                                component="th"
-                                scope="row"
-                            >
-                                Сироткин Николай
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                                Logistik
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                                {new Date().getFullYear()}
-                            </StyledTableCell>
-                            <StyledTableCell align="center"></StyledTableCell>
-                        </StyledTableRow>
-                        <StyledTableRow>
-                            <StyledTableCell
-                                align="center"
-                                component="th"
-                                scope="row"
-                            >
-                                Сироткин Николай
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                                Logistik
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                                {new Date().getFullYear()}
-                            </StyledTableCell>
-                            <StyledTableCell align="center"></StyledTableCell>
-                        </StyledTableRow>
-                        <StyledTableRow>
-                            <StyledTableCell
-                                align="center"
-                                component="th"
-                                scope="row"
-                            >
-                                Сироткин Николай
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                                Logistik
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                                {new Date().getFullYear()}
-                            </StyledTableCell>
-                            <StyledTableCell align="center"></StyledTableCell>
-                        </StyledTableRow>
-                        <StyledTableRow>
-                            <StyledTableCell
-                                align="center"
-                                component="th"
-                                scope="row"
-                            >
-                                Сироткин Николай
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                                Logistik
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                                {new Date().getFullYear()}
-                            </StyledTableCell>
-                            <StyledTableCell align="center"></StyledTableCell>
-                        </StyledTableRow>
+                        {users.map((user: User) => {
+                            return (
+                                <StyledTableRow key={user.id}>
+                                    <StyledTableCell
+                                        align="center"
+                                        component="th"
+                                        scope="row"
+                                    >
+                                        {user.name}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {user.rule_id}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {new Date(
+                                            user.created_at
+                                        ).toLocaleString("ru-RU", {
+                                            day: "numeric",
+                                            month: "long",
+                                            year: "numeric",
+                                            timeZone: "UTC",
+                                            hour: "numeric",
+                                            minute: "numeric",
+                                        })}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center"></StyledTableCell>
+                                </StyledTableRow>
+                            );
+                        })}
                     </TableBody>
                 </Table>
             </TableContainer>
