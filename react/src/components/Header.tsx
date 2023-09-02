@@ -70,7 +70,7 @@ export const Header: React.FC = () => {
                     <Box sx={{ flexGrow: 1 }}></Box>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <Avatar></Avatar>
-                        <Typography>{user?.name}</Typography>
+                        <Typography>{`${user?.name} ${user?.lastname}`}</Typography>
                         <Button
                             variant="contained"
                             onClick={handleLogout}

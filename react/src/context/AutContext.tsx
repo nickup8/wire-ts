@@ -8,10 +8,16 @@ import {
 } from "react";
 import { axiosClient } from "../axiosClient";
 
+interface IRule {
+    id: number;
+    title: string;
+}
+
 export type User = {
     id: number;
     name: string;
-    rule_id: number;
+    lastname: string;
+    rule: IRule;
     created_at: Date;
 };
 
@@ -40,7 +46,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // set user to local storage
     const setUser = (user: User) => {
         if (user) {
-            localStorage.setItem("user", JSON.stringify(user.name));
+            localStorage.setItem(
+                "user",
+                JSON.stringify(`${user.name} ${user.lastname}`)
+            );
         } else {
             localStorage.removeItem("user");
         }

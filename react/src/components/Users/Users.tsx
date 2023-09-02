@@ -48,6 +48,8 @@ export const Users = () => {
             });
         } catch (error) {}
     }, []);
+
+    console.log(users);
     return (
         <Paper sx={{ p: 4 }}>
             <Box
@@ -70,6 +72,12 @@ export const Users = () => {
                 <Table aria-label="customized table">
                     <TableHead>
                         <TableRow>
+                            <StyledTableCell
+                                align="center"
+                                sx={{ fontSize: "18px" }}
+                            >
+                                Фамилия
+                            </StyledTableCell>
                             <StyledTableCell
                                 align="center"
                                 sx={{ fontSize: "18px" }}
@@ -105,10 +113,17 @@ export const Users = () => {
                                         component="th"
                                         scope="row"
                                     >
+                                        {user.lastname}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        component="th"
+                                        scope="row"
+                                    >
                                         {user.name}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {user.rule_id}
+                                        {user.rule.title}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {new Date(
@@ -117,7 +132,6 @@ export const Users = () => {
                                             day: "numeric",
                                             month: "long",
                                             year: "numeric",
-                                            timeZone: "UTC",
                                             hour: "numeric",
                                             minute: "numeric",
                                         })}
