@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\v1\RuleController;
+use App\Http\Controllers\v1\SupplierController;
 use App\Http\Controllers\v1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,4 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
+    Route::post('/suppliers', [SupplierController::class, 'create']);
+    Route::get('/suppliers', [SupplierController::class, 'index']);
+    Route::get('/rules', [RuleController::class, 'index']);
 });

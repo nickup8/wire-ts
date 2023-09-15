@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, _setUser] = useState(
         JSON.parse(localStorage.getItem("user")) || ""
     );
+    const [userLoad, setUserLoad] = useState(true);
     // set user to local storage
     const setUser = (user: User) => {
         if (user) {
@@ -63,7 +64,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     return (
-        <AuthContent.Provider value={{ user, setUser, csrfToken }}>
+        <AuthContent.Provider
+            value={{ user, setUser, csrfToken, userLoad, setUserLoad }}
+        >
             {children}
         </AuthContent.Provider>
     );

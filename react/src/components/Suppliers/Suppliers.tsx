@@ -1,22 +1,30 @@
 import {
     Paper,
-    Button,
     Box,
     Typography,
     Divider,
+    TextField,
+    Button,
+    Stack,
+    styled,
     TableContainer,
-    Table,
+    TableCell,
+    tableCellClasses,
     TableRow,
+    Table,
     TableHead,
     TableBody,
-    TableCell,
-    styled,
-    tableCellClasses,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { axiosClient } from "../../axiosClient";
-import { User } from "../../context/AutContext";
+import { Link } from "react-router-dom";
+
+interface ISupplier {
+    id: number;
+    code: string;
+    name: string;
+    created_at: Date;
+}
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -38,32 +46,30 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-export const Users = () => {
-    const [users, setUsers] = useState([]);
-
+export const Suppliers = () => {
+    const [suppliers, setSuppliers] = useState([]);
     useEffect(() => {
         try {
-            axiosClient.get("/users").then((data) => {
-                setUsers(data.data.data);
+            axiosClient.get("/suppliers").then((response) => {
+                setSuppliers(response.data.data);
             });
-        } catch (error) {}
+        } catch (err) {}
     }, []);
-
     return (
         <Paper sx={{ p: 4 }}>
             <Box
                 sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
             >
                 <Typography variant="h4" fontWeight="bold">
-                    Пользователи
+                    Поставщики
                 </Typography>
                 <Button
+                    to="/suppliers/new"
+                    component={Link}
                     variant="contained"
                     size="small"
-                    component={Link}
-                    to="/users/new"
                 >
-                    Добавить пользователя
+                    Добавить поставщика
                 </Button>
             </Box>
             <Divider />
@@ -75,14 +81,14 @@ export const Users = () => {
                                 align="center"
                                 sx={{ fontSize: "18px" }}
                             >
-                                Фамилия Имя
+                                Код поставщика
                             </StyledTableCell>
 
                             <StyledTableCell
                                 align="center"
                                 sx={{ fontSize: "18px" }}
                             >
-                                Роль
+                                Наименование
                             </StyledTableCell>
                             <StyledTableCell
                                 align="center"
@@ -99,22 +105,22 @@ export const Users = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.map((user: User) => {
+                        {suppliers.map((supplier: ISupplier) => {
                             return (
-                                <StyledTableRow key={user.id}>
+                                <StyledTableRow key={supplier.id}>
                                     <StyledTableCell
                                         align="center"
                                         component="th"
                                         scope="row"
                                     >
-                                        {`${user.lastname} ${user.name}`}
+                                        {supplier.code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {user.rule.title}
+                                        {supplier.name}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {new Date(
-                                            user.created_at
+                                            supplier.created_at
                                         ).toLocaleString("ru-RU", {
                                             day: "numeric",
                                             month: "long",
