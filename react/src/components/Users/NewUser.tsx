@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Paper,
     Box,
@@ -23,11 +23,17 @@ import { useForm, Controller } from "react-hook-form";
 import { axiosClient } from "../../axiosClient";
 import { useNavigate } from "react-router-dom";
 
+interface IRule {
+    id: number;
+    title: string;
+}
+
 export const NewUser = () => {
     const [rule, setRule] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [confirmShowPassword, setConfirmShowPassword] = useState(false);
     const [errorsBacked, setErrorsBackend] = useState([]);
+    const [rules, setRules] = useState([]);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleClickConfirmShowPassword = () =>
@@ -52,10 +58,17 @@ export const NewUser = () => {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        axiosClient.get("/rules").then((data) => {
+            setRules(data.data.data);
+        });
+    }, []);
+
     const onSubmit = async () => {
         try {
             const resp = await axiosClient.post("/register", {
                 name: getValues("name"),
+                lastname: getValues("lastname"),
                 login: getValues("login"),
                 password: getValues("password"),
                 password_confirmation: getValues("password_confirmation"),
@@ -72,8 +85,6 @@ export const NewUser = () => {
             }
         }
     };
-
-    console.log(errorsBacked);
 
     const handleChange = (event: SelectChangeEvent) => {
         setRule(event.target.value as string);
@@ -111,6 +122,16 @@ export const NewUser = () => {
                         error={!!errors.name}
                         fullWidth
                         {...register("name", {
+                            required: "Введите имя",
+                        })}
+                        helperText={errors.name?.message}
+                    />
+                    <TextField
+                        label="Фамилия"
+                        size="small"
+                        error={!!errors.name}
+                        fullWidth
+                        {...register("lastname", {
                             required: "Введите имя",
                         })}
                         helperText={errors.name?.message}
@@ -209,9 +230,16 @@ export const NewUser = () => {
                                     onChange={handleChange}
                                     value={rule}
                                 >
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
+                                    {rules.map((rule: IRule) => {
+                                        return (
+                                            <MenuItem
+                                                key={rule.id}
+                                                value={rule.id}
+                                            >
+                                                {rule.title}
+                                            </MenuItem>
+                                        );
+                                    })}
                                 </Select>
                                 <FormHelperText>
                                     {errors.rule_id?.message}

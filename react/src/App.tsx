@@ -7,6 +7,8 @@ import { ErrorPage } from "./layouts/ErrorPage";
 import { Logistic } from "./layouts/Logistic";
 import { Dashboard } from "./components/Dashboard/Dashboard";
 import { NewUser } from "./components/Users/NewUser";
+import { Suppliers } from "./components/Suppliers/Suppliers";
+import { SupplierNew } from "./components/Suppliers/SupplierNew";
 
 function App() {
     return (
@@ -17,6 +19,8 @@ function App() {
                     <Route index path="/" element={<Dashboard />} />
                     <Route path="/users" element={<Users />} />
                     <Route path="/users/new" element={<NewUser />} />
+                    <Route path="/suppliers" element={<Suppliers />} />
+                    <Route path="/suppliers/new" element={<SupplierNew />} />
                 </Route>
             </Route>
             <Route path="*" element={<ErrorPage />} />

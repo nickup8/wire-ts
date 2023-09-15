@@ -174,7 +174,7 @@ export const Sidebar = () => {
                         <ListItemButton
                             sx={{ pl: 4 }}
                             component={Link}
-                            to="/supplier"
+                            to="/suppliers"
                         >
                             <ListItemIcon>
                                 <SystemUpdateAltIcon />
