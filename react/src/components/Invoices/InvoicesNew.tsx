@@ -22,6 +22,7 @@ import { Supplier } from "../typesAndInterfaces";
 export const InvoicesNew = () => {
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
     const [errorsBacked, setErrorsBackend] = useState([]);
+    const [wires, setWires] = useState<any[]>([]);
     const form = useForm();
 
     const { register, formState, handleSubmit, getValues, control } = form;

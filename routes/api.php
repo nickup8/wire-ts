@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\v1\InvoiceController;
 use App\Http\Controllers\v1\RuleController;
 use App\Http\Controllers\v1\SupplierController;
 use App\Http\Controllers\v1\UserController;
@@ -31,4 +32,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/suppliers', [SupplierController::class, 'create']);
     Route::get('/suppliers', [SupplierController::class, 'index']);
     Route::get('/rules', [RuleController::class, 'index']);
+    Route::post('/invoice', [InvoiceController::class, 'create']);
 });
