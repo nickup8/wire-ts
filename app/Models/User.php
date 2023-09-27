@@ -51,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Rule::class);
     }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
 }
