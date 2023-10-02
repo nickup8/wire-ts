@@ -12,7 +12,7 @@ class InvoiceController extends Controller
 {
     public function index()
     {
-        return Invoice::all();
+        return InvoiceResource::collection(Invoice::all());
     }
 
     public function create(InvoiseRequest $request)

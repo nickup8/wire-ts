@@ -17,13 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import { axiosClient } from "../../axiosClient";
 import { Link } from "react-router-dom";
-
-interface ISupplier {
-    id: number;
-    code: string;
-    name: string;
-    created_at: Date;
-}
+import { IInvoice } from "../typesAndInterfaces";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -46,11 +40,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const Invoices = () => {
-    const [suppliers, setSuppliers] = useState([]);
+    const [invoices, setInvoices] = useState([]);
     useEffect(() => {
         try {
-            axiosClient.get("/suppliers").then((response) => {
-                setSuppliers(response.data.data);
+            axiosClient.get("/invoices").then((response) => {
+                setInvoices(response.data.data);
             });
         } catch (err) {}
     }, []);
@@ -122,22 +116,40 @@ export const Invoices = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {suppliers.map((supplier: ISupplier) => {
+                        {invoices.map((invoice: IInvoice) => {
                             return (
-                                <StyledTableRow key={supplier.id}>
+                                <StyledTableRow key={invoice.id}>
                                     <StyledTableCell
                                         align="center"
                                         component="th"
                                         scope="row"
                                     >
-                                        {supplier.code}
+                                        {invoice.number}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {supplier.name}
+                                        {new Date(invoice.date).toLocaleString(
+                                            "ru-RU",
+                                            {
+                                                day: "numeric",
+                                                month: "long",
+                                                year: "numeric",
+                                            }
+                                        )}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {invoice.supplier.code}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {invoice.supplier.name}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {invoice.user.lastname +
+                                            " " +
+                                            invoice.user.name}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {new Date(
-                                            supplier.created_at
+                                            invoice.created_at
                                         ).toLocaleString("ru-RU", {
                                             day: "numeric",
                                             month: "long",
