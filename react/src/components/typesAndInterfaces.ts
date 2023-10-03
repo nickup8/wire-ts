@@ -9,15 +9,16 @@ export interface IInvoice {
     id: number;
     number: string;
     date: string;
-    supplier: {
-        id: number;
-        code: string;
-        name: string;
-    };
+    supplier: Supplier;
     user: {
         id: number;
         name: string;
         lastname: string;
     };
     created_at: Date;
+}
+
+export interface IInvoiceProps {
+    file: {};
+    invoice: IInvoice;
 }
