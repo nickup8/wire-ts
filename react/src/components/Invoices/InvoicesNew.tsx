@@ -8,21 +8,12 @@ import {
     Stack,
     TextField,
     Alert,
-    Autocomplete,
     MenuItem,
     FormControl,
     FormHelperText,
     Select,
     InputLabel,
     SelectChangeEvent,
-    TableContainer,
-    Table,
-    TableRow,
-    TableHead,
-    TableBody,
-    TableCell,
-    styled,
-    tableCellClasses,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -32,6 +23,7 @@ import { useForm, Controller } from "react-hook-form";
 import { axiosClient } from "../../axiosClient";
 import { IInvoice, Supplier } from "../typesAndInterfaces";
 import { useAuth } from "../../context/AutContext";
+import { Invoice } from "./Invoice";
 
 export const InvoicesNew = () => {
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -39,7 +31,6 @@ export const InvoicesNew = () => {
     const [errorsBacked, setErrorsBackend] = useState([]);
     const [creatingInvoice, setCreatingInvoices] = useState<IInvoice[]>([]);
     const [invoice, setInvoice] = useState(false);
-    const [wires, setWires] = useState<any[]>([]);
     const form = useForm();
     const { user } = useAuth();
 
@@ -70,13 +61,12 @@ export const InvoicesNew = () => {
             if (resp.status === 200) {
                 setCreatingInvoices(resp.data.invoice);
                 setInvoice(true);
-                console.log(resp);
             }
         } catch (error: any) {
             if (error.status === 401) {
-                setErrorsBackend(error.response.data.message);
+                setErrorsBackend(error.response.message);
             } else if (error.status === 422) {
-                setErrorsBackend(error.response.data.message);
+                setErrorsBackend(error.response.message);
             }
         }
     };
@@ -84,26 +74,6 @@ export const InvoicesNew = () => {
     const handleChange = (event: SelectChangeEvent) => {
         setSupplier_id(event.target.value as string);
     };
-
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({
-        [`&.${tableCellClasses.head}`]: {
-            backgroundColor: "#34495E",
-            color: theme.palette.common.white,
-        },
-        [`&.${tableCellClasses.body}`]: {
-            fontSize: 14,
-        },
-    }));
-
-    const StyledTableRow = styled(TableRow)(({ theme }) => ({
-        "&:nth-of-type(odd)": {
-            backgroundColor: theme.palette.action.hover,
-        },
-        // hide last border
-        "&:last-child td, &:last-child th": {
-            border: 0,
-        },
-    }));
 
     return (
         <>
@@ -200,7 +170,12 @@ export const InvoicesNew = () => {
                                 control={control}
                             />
 
-                            <TextField fullWidth type="file" size="small" />
+                            <TextField
+                                fullWidth
+                                type="file"
+                                size="small"
+                                {...register("invoice")}
+                            />
                         </Stack>
                         <Button
                             variant="contained"
@@ -217,83 +192,10 @@ export const InvoicesNew = () => {
                     )}
                 </Paper>
             ) : (
-                <Paper sx={{ p: 4 }}>
-                    <Box sx={{ mb: 2 }}>
-                        <Typography variant="h4" fontWeight="bold">
-                            Накладная № {creatingInvoice?.number} от{" "}
-                            {creatingInvoice?.date}
-                        </Typography>
-                        <Typography variant="h6">
-                            Поставщик {creatingInvoice.supplier.name}
-                        </Typography>
-                    </Box>
-                    <Typography variant="h4" fontWeight="bold">
-                        Материалы
-                    </Typography>
-                    <TableContainer sx={{ mt: 2 }}>
-                        <Table aria-label="customized table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Фамилия Имя
-                                    </StyledTableCell>
-
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Роль
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Дата создания
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Действия
-                                    </StyledTableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {wires.map((wire: User) => {
-                                    return (
-                                        <StyledTableRow key={wire.id}>
-                                            <StyledTableCell
-                                                align="center"
-                                                component="th"
-                                                scope="row"
-                                            >
-                                                {`${wire.lastname} ${user.name}`}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {wire.rule.title}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {new Date(
-                                                    wire.created_at
-                                                ).toLocaleString("ru-RU", {
-                                                    day: "numeric",
-                                                    month: "long",
-                                                    year: "numeric",
-                                                    hour: "numeric",
-                                                    minute: "numeric",
-                                                })}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center"></StyledTableCell>
-                                        </StyledTableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Paper>
+                <Invoice
+                    file={getValues("invoice")}
+                    invoice={creatingInvoice}
+                />
             )}
         </>
     );
