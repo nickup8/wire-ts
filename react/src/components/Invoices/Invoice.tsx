@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import {
     Paper,
     Typography,
     Box,
+    Button,
+    TextField,
     TableContainer,
     Table,
     TableRow,
@@ -13,6 +15,7 @@ import {
     tableCellClasses,
 } from "@mui/material";
 import { IInvoice, IInvoiceProps } from "../typesAndInterfaces";
+import { axiosClient } from "../../axiosClient";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -34,23 +37,75 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-export const Invoice = ({ file, invoice }: IInvoiceProps) => {
+export const Invoice = ({ file, invoices }: IInvoiceProps) => {
     const [wires, setWires] = useState([]);
+    const [fileExcel, setFileExcel] = useState(null);
     console.log(file);
-    console.log(invoice);
+
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            setFileExcel(event.target.files[0]);
+        }
+    };
+
+    const onSubmit = async () => {
+        if (!fileExcel) {
+            return;
+        }
+
+        try {
+            const resp = await axiosClient.post("/import", {
+                invoice: fileExcel,
+            });
+            if (resp.status === 200) {
+                setWires(resp.data.wires);
+            }
+        } catch (error) {}
+    };
+    // console.log(invoice[0].name);
+
+    // useEffect(() => {
+    //     try {
+    //         axiosClient
+    //             .post(
+    //                 "/import",
+    //                 {
+    //                     invoice: file,
+    //                 }
+    //                 // {
+    //                 //     headers: {
+    //                 //         "Content-Type": file?.type,
+    //                 //         "Content-Length": `${file?.size}`,
+    //                 //     },
+    //                 // }
+    //             )
+    //             .then((resp) => {
+    //                 setWires(resp.data.wires);
+    //                 console.log(wires);
+    //             });
+    //     } catch (error) {}
+    // });
+
     return (
         <Paper sx={{ p: 4 }}>
             <Box sx={{ mb: 2 }}>
                 <Typography variant="h4" fontWeight="bold">
-                    Накладная № {invoice.number} от {invoice?.date}
+                    Накладная № {invoices.number} от {invoices?.date}
                 </Typography>
                 <Typography variant="h6">
-                    Поставщик: {invoice.supplier.name}
+                    Поставщик: {invoices.supplier.name}
                 </Typography>
             </Box>
             <Typography variant="h4" fontWeight="bold">
                 Материалы
             </Typography>
+            <TextField
+                fullWidth
+                type="file"
+                size="small"
+                onChange={handleFileChange}
+            />
+            <Button onClick={onSubmit}>Dowload</Button>
             {/* <TableContainer sx={{ mt: 2 }}>
                 <Table aria-label="customized table">
                     <TableHead>

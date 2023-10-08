@@ -21,6 +21,7 @@ import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Grid4x4Icon from "@mui/icons-material/Grid4x4";
 import GroupIcon from "@mui/icons-material/Group";
+import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 
 import { useAppSelector } from "../hooks";
 import { useState } from "react";
@@ -180,6 +181,36 @@ export const Sidebar = () => {
                                 <SystemUpdateAltIcon />
                             </ListItemIcon>
                             <ListItemText primary="Поставщики" />
+                        </ListItemButton>
+                        <ListItemButton
+                            sx={{ pl: 4 }}
+                            component={Link}
+                            to="/storage_bin_warehouse"
+                        >
+                            <ListItemIcon>
+                                <WarehouseIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="МХ склад" />
+                        </ListItemButton>
+                        <ListItemButton
+                            sx={{ pl: 4 }}
+                            component={Link}
+                            to="/storage_bin_feeding"
+                        >
+                            <ListItemIcon>
+                                <Grid4x4Icon />
+                            </ListItemIcon>
+                            <ListItemText primary="МХ фидинг" />
+                        </ListItemButton>
+                        <ListItemButton
+                            sx={{ pl: 4 }}
+                            component={Link}
+                            to="/machines"
+                        >
+                            <ListItemIcon>
+                                <SystemUpdateAltIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Оборудование" />
                         </ListItemButton>
                     </List>
                 </Collapse>

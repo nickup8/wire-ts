@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
     Paper,
     Typography,
@@ -29,8 +29,11 @@ export const InvoicesNew = () => {
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
     const [supplier_id, setSupplier_id] = useState("");
     const [errorsBacked, setErrorsBackend] = useState([]);
-    const [creatingInvoice, setCreatingInvoices] = useState<IInvoice[]>([]);
+    const [creatingInvoice, setCreatingInvoices] = useState<IInvoice | null>(
+        null
+    );
     const [invoice, setInvoice] = useState(false);
+    const [fileExcel, setFileExcel] = useState(null);
     const form = useForm();
     const { user } = useAuth();
 
@@ -73,6 +76,12 @@ export const InvoicesNew = () => {
 
     const handleChange = (event: SelectChangeEvent) => {
         setSupplier_id(event.target.value as string);
+    };
+
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            setFileExcel(event.target.files[0]);
+        }
     };
 
     return (
@@ -174,7 +183,7 @@ export const InvoicesNew = () => {
                                 fullWidth
                                 type="file"
                                 size="small"
-                                {...register("invoice")}
+                                onChange={handleFileChange}
                             />
                         </Stack>
                         <Button
@@ -192,10 +201,7 @@ export const InvoicesNew = () => {
                     )}
                 </Paper>
             ) : (
-                <Invoice
-                    file={getValues("invoice")}
-                    invoice={creatingInvoice}
-                />
+                <Invoice file={fileExcel} invoices={creatingInvoice} />
             )}
         </>
     );
