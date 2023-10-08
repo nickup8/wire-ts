@@ -19,6 +19,6 @@ export interface IInvoice {
 }
 
 export interface IInvoiceProps {
-    file: File | null;
+    file: Array<string>;
     invoices: IInvoice;
 }

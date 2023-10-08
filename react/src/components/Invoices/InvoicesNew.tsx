@@ -24,6 +24,7 @@ import { axiosClient } from "../../axiosClient";
 import { IInvoice, Supplier } from "../typesAndInterfaces";
 import { useAuth } from "../../context/AutContext";
 import { Invoice } from "./Invoice";
+import * as XLSX from "xlsx";
 
 export const InvoicesNew = () => {
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -34,6 +35,8 @@ export const InvoicesNew = () => {
     );
     const [invoice, setInvoice] = useState(false);
     const [fileExcel, setFileExcel] = useState(null);
+    const [typeError, setTypeError] = useState<string | null>(null);
+    const [excelData, setExcelData] = useState([]);
     const form = useForm();
     const { user } = useAuth();
 
@@ -64,6 +67,13 @@ export const InvoicesNew = () => {
             if (resp.status === 200) {
                 setCreatingInvoices(resp.data.invoice);
                 setInvoice(true);
+                if (fileExcel !== null) {
+                    const workbook = XLSX.read(fileExcel, { type: "buffer" });
+                    const worksheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[worksheetName];
+                    const data = XLSX.utils.sheet_to_json(worksheet);
+                    setExcelData(data);
+                }
             }
         } catch (error: any) {
             if (error.status === 401) {
@@ -79,8 +89,25 @@ export const InvoicesNew = () => {
     };
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files) {
-            setFileExcel(event.target.files[0]);
+        let fileTypes = [
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-excel",
+        ];
+        let selectedFile = event.target.files[0];
+        if (selectedFile) {
+            if (selectedFile && fileTypes.includes(selectedFile.type)) {
+                setTypeError(null);
+                let reader = new FileReader();
+                reader.readAsArrayBuffer(selectedFile);
+                reader.onload = (event: any) => {
+                    setFileExcel(event.target.result);
+                };
+            } else {
+                setTypeError("Выберите подходящий excel файл");
+                setFileExcel(null);
+            }
+        } else {
+            console.log("No file selected");
         }
     };
 
@@ -199,9 +226,14 @@ export const InvoicesNew = () => {
                             {errorsBacked}
                         </Alert>
                     )}
+                    {typeError && (
+                        <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
+                            {typeError}
+                        </Alert>
+                    )}
                 </Paper>
             ) : (
-                <Invoice file={fileExcel} invoices={creatingInvoice} />
+                <Invoice file={excelData} invoices={creatingInvoice} />
             )}
         </>
     );
