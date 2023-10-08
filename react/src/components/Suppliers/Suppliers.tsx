@@ -18,6 +18,7 @@ import {
 import { useEffect, useState } from "react";
 import { axiosClient } from "../../axiosClient";
 import { Link } from "react-router-dom";
+import { Preloader } from "../Preloader/Preloader";
 
 interface ISupplier {
     id: number;
@@ -56,86 +57,96 @@ export const Suppliers = () => {
         } catch (err) {}
     }, []);
     return (
-        <Paper sx={{ p: 4 }}>
-            <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
-            >
-                <Typography variant="h4" fontWeight="bold">
-                    Поставщики
-                </Typography>
-                <Button
-                    to="/suppliers/new"
-                    component={Link}
-                    variant="contained"
-                    size="small"
-                >
-                    Добавить поставщика
-                </Button>
-            </Box>
-            <Divider />
-            <TableContainer sx={{ mt: 2 }}>
-                <Table aria-label="customized table">
-                    <TableHead>
-                        <TableRow>
-                            <StyledTableCell
-                                align="center"
-                                sx={{ fontSize: "18px" }}
-                            >
-                                Код поставщика
-                            </StyledTableCell>
-
-                            <StyledTableCell
-                                align="center"
-                                sx={{ fontSize: "18px" }}
-                            >
-                                Наименование
-                            </StyledTableCell>
-                            <StyledTableCell
-                                align="center"
-                                sx={{ fontSize: "18px" }}
-                            >
-                                Дата создания
-                            </StyledTableCell>
-                            <StyledTableCell
-                                align="center"
-                                sx={{ fontSize: "18px" }}
-                            >
-                                Действия
-                            </StyledTableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {suppliers.map((supplier: ISupplier) => {
-                            return (
-                                <StyledTableRow key={supplier.id}>
+        <>
+            {suppliers.length ? (
+                <Paper sx={{ p: 4 }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            mb: 1,
+                        }}
+                    >
+                        <Typography variant="h4" fontWeight="bold">
+                            Поставщики
+                        </Typography>
+                        <Button
+                            to="/suppliers/new"
+                            component={Link}
+                            variant="contained"
+                            size="small"
+                        >
+                            Добавить поставщика
+                        </Button>
+                    </Box>
+                    <Divider />
+                    <TableContainer sx={{ mt: 2 }}>
+                        <Table aria-label="customized table">
+                            <TableHead>
+                                <TableRow>
                                     <StyledTableCell
                                         align="center"
-                                        component="th"
-                                        scope="row"
+                                        sx={{ fontSize: "18px" }}
                                     >
-                                        {supplier.code}
+                                        Код поставщика
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {supplier.name}
+
+                                    <StyledTableCell
+                                        align="center"
+                                        sx={{ fontSize: "18px" }}
+                                    >
+                                        Наименование
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {new Date(
-                                            supplier.created_at
-                                        ).toLocaleString("ru-RU", {
-                                            day: "numeric",
-                                            month: "long",
-                                            year: "numeric",
-                                            hour: "numeric",
-                                            minute: "numeric",
-                                        })}
+                                    <StyledTableCell
+                                        align="center"
+                                        sx={{ fontSize: "18px" }}
+                                    >
+                                        Дата создания
                                     </StyledTableCell>
-                                    <StyledTableCell align="center"></StyledTableCell>
-                                </StyledTableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Paper>
+                                    <StyledTableCell
+                                        align="center"
+                                        sx={{ fontSize: "18px" }}
+                                    >
+                                        Действия
+                                    </StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {suppliers.map((supplier: ISupplier) => {
+                                    return (
+                                        <StyledTableRow key={supplier.id}>
+                                            <StyledTableCell
+                                                align="center"
+                                                component="th"
+                                                scope="row"
+                                            >
+                                                {supplier.code}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="center">
+                                                {supplier.name}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="center">
+                                                {new Date(
+                                                    supplier.created_at
+                                                ).toLocaleString("ru-RU", {
+                                                    day: "numeric",
+                                                    month: "long",
+                                                    year: "numeric",
+                                                    hour: "numeric",
+                                                    minute: "numeric",
+                                                })}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="center"></StyledTableCell>
+                                        </StyledTableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Paper>
+            ) : (
+                <Preloader />
+            )}
+        </>
     );
 };

@@ -5,6 +5,7 @@ use App\Http\Controllers\v1\InvoiceController;
 use App\Http\Controllers\v1\RuleController;
 use App\Http\Controllers\v1\SupplierController;
 use App\Http\Controllers\v1\UserController;
+use App\Http\Controllers\V1\WireController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,4 +35,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/rules', [RuleController::class, 'index']);
     Route::post('/invoice', [InvoiceController::class, 'create']);
     Route::get('/invoices', [InvoiceController::class, 'index']);
+    Route::post('/import', [WireController::class, 'import']);
 });

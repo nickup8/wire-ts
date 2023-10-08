@@ -19,6 +19,6 @@ export interface IInvoice {
 }
 
 export interface IInvoiceProps {
-    file: {};
-    invoice: IInvoice;
+    file: File | null;
+    invoices: IInvoice;
 }

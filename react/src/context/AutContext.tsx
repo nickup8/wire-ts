@@ -51,10 +51,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 "user",
                 JSON.stringify(`${user.name} ${user.lastname}`)
             );
+            setUserLoad(false);
         } else {
             localStorage.removeItem("user");
         }
         _setUser(user);
+        setUserLoad(false);
     };
 
     // csrf token generation for guest methods

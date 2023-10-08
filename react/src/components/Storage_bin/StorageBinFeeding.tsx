@@ -1,7 +1,9 @@
+import React from "react";
 import {
+    Box,
+    Stack,
     Paper,
     Button,
-    Box,
     Typography,
     Divider,
     TableContainer,
@@ -12,12 +14,8 @@ import {
     TableCell,
     styled,
     tableCellClasses,
+    TextField,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { axiosClient } from "../../axiosClient";
-import { User } from "../../context/AutContext";
-import { Preloader } from "../Preloader/Preloader";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -38,42 +36,49 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         border: 0,
     },
 }));
-
-export const Users = () => {
-    const [users, setUsers] = useState([]);
-
-    useEffect(() => {
-        try {
-            axiosClient.get("/users").then((data) => {
-                setUsers(data.data.data);
-            });
-        } catch (error) {}
-    }, []);
-
+export const StorageBinFeeding = () => {
     return (
-        <>
-            {users.length ? (
-                <Paper sx={{ p: 4 }}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            mb: 1,
-                        }}
-                    >
-                        <Typography variant="h4" fontWeight="bold">
-                            Пользователи
-                        </Typography>
-                        <Button
-                            variant="contained"
+        <Box>
+            <Typography variant="h4" fontWeight="bold" sx={{ mb: 2 }}>
+                Места хранения на фидинге
+            </Typography>
+
+            <Stack direction="row" spacing={2}>
+                <Paper sx={{ p: 2, width: "420px", textAlign: "center" }}>
+                    <Typography variant="h6" sx={{ mb: 2 }} fontWeight="bold">
+                        Добавить МХ
+                    </Typography>
+                    <Stack spacing={1} component="form">
+                        <TextField
+                            type="text"
+                            label="Rack"
                             size="small"
-                            component={Link}
-                            to="/users/new"
-                        >
-                            Добавить пользователя
-                        </Button>
-                    </Box>
-                    <Divider />
+                            fullWidth
+                        />
+                        <TextField
+                            type="text"
+                            label="Начальное МХ"
+                            size="small"
+                            fullWidth
+                        />
+                        <TextField
+                            type="text"
+                            label="Конечное МХ"
+                            size="small"
+                            fullWidth
+                        />
+                        <TextField
+                            type="text"
+                            label="Количество уровней"
+                            size="small"
+                            fullWidth
+                        />
+                        <Box>
+                            <Button variant="contained">Добавить</Button>
+                        </Box>
+                    </Stack>
+                </Paper>
+                <Paper sx={{ p: 2, width: "100%" }}>
                     <TableContainer sx={{ mt: 2 }}>
                         <Table aria-label="customized table">
                             <TableHead>
@@ -82,30 +87,36 @@ export const Users = () => {
                                         align="center"
                                         sx={{ fontSize: "18px" }}
                                     >
-                                        Фамилия Имя
+                                        Стелаж
                                     </StyledTableCell>
 
                                     <StyledTableCell
                                         align="center"
                                         sx={{ fontSize: "18px" }}
                                     >
-                                        Роль
+                                        Начальное МХ
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
                                         sx={{ fontSize: "18px" }}
                                     >
-                                        Дата создания
+                                        Конечное МХ
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
                                         sx={{ fontSize: "18px" }}
                                     >
-                                        Действия
+                                        Количество уровней
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        sx={{ fontSize: "18px" }}
+                                    >
+                                        Всего МХ
                                     </StyledTableCell>
                                 </TableRow>
                             </TableHead>
-                            <TableBody>
+                            {/* <TableBody>
                                 {users.map((user: User) => {
                                     return (
                                         <StyledTableRow key={user.id}>
@@ -134,13 +145,11 @@ export const Users = () => {
                                         </StyledTableRow>
                                     );
                                 })}
-                            </TableBody>
+                            </TableBody> */}
                         </Table>
                     </TableContainer>
                 </Paper>
-            ) : (
-                <Preloader />
-            )}
-        </>
+            </Stack>
+        </Box>
     );
 };

@@ -11,6 +11,10 @@ import { Suppliers } from "./components/Suppliers/Suppliers";
 import { SupplierNew } from "./components/Suppliers/SupplierNew";
 import { Invoices } from "./components/Invoices/Invoices";
 import { InvoicesNew } from "./components/Invoices/InvoicesNew";
+import { StorageBinWarehouse } from "./components/Storage_bin/StorageBinWarehouse";
+import { StorageBinFeeding } from "./components/Storage_bin/StorageBinFeeding";
+import { Machines } from "./components/Machines/Machines";
+import { Preloader } from "./components/Preloader/Preloader";
 
 function App() {
     return (
@@ -25,6 +29,16 @@ function App() {
                     <Route path="/suppliers/new" element={<SupplierNew />} />
                     <Route path="/invoices" element={<Invoices />} />
                     <Route path="/invoices/new" element={<InvoicesNew />} />
+                    <Route
+                        path="/storage_bin_warehouse"
+                        element={<StorageBinWarehouse />}
+                    />
+                    <Route
+                        path="/storage_bin_feeding"
+                        element={<StorageBinFeeding />}
+                    />
+                    <Route path="/machines" element={<Machines />} />
+                    <Route path="/load" element={<Preloader />} />
                 </Route>
             </Route>
             <Route path="*" element={<ErrorPage />} />
