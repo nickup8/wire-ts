@@ -13,6 +13,7 @@ import {
     TableCell,
     styled,
     tableCellClasses,
+    Checkbox,
 } from "@mui/material";
 import { IInvoice, IInvoiceProps } from "../typesAndInterfaces";
 import { axiosClient } from "../../axiosClient";
@@ -37,55 +38,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
+const label = { inputProps: { "aria-label": "" } };
+
 export const Invoice = ({ file, invoices }: IInvoiceProps) => {
-    const [wires, setWires] = useState([]);
-    const [fileExcel, setFileExcel] = useState(null);
-    console.log(file);
-
-    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files) {
-            setFileExcel(event.target.files[0]);
-        }
-    };
-
-    const onSubmit = async () => {
-        if (!fileExcel) {
-            return;
-        }
-
-        try {
-            const resp = await axiosClient.post("/import", {
-                invoice: fileExcel,
-            });
-            if (resp.status === 200) {
-                setWires(resp.data.wires);
-            }
-        } catch (error) {}
-    };
-    // console.log(invoice[0].name);
-
-    // useEffect(() => {
-    //     try {
-    //         axiosClient
-    //             .post(
-    //                 "/import",
-    //                 {
-    //                     invoice: file,
-    //                 }
-    //                 // {
-    //                 //     headers: {
-    //                 //         "Content-Type": file?.type,
-    //                 //         "Content-Length": `${file?.size}`,
-    //                 //     },
-    //                 // }
-    //             )
-    //             .then((resp) => {
-    //                 setWires(resp.data.wires);
-    //                 console.log(wires);
-    //             });
-    //     } catch (error) {}
-    // });
-
     return (
         <Paper sx={{ p: 4 }}>
             <Box sx={{ mb: 2 }}>
@@ -99,14 +54,8 @@ export const Invoice = ({ file, invoices }: IInvoiceProps) => {
             <Typography variant="h4" fontWeight="bold">
                 Материалы
             </Typography>
-            <TextField
-                fullWidth
-                type="file"
-                size="small"
-                onChange={handleFileChange}
-            />
-            <Button onClick={onSubmit}>Dowload</Button>
-            {/* <TableContainer sx={{ mt: 2 }}>
+
+            <TableContainer sx={{ mt: 2 }}>
                 <Table aria-label="customized table">
                     <TableHead>
                         <TableRow>
@@ -114,61 +63,58 @@ export const Invoice = ({ file, invoices }: IInvoiceProps) => {
                                 align="center"
                                 sx={{ fontSize: "18px" }}
                             >
-                                Фамилия Имя
+                                Материал
                             </StyledTableCell>
 
                             <StyledTableCell
                                 align="center"
                                 sx={{ fontSize: "18px" }}
                             >
-                                Роль
+                                HU
                             </StyledTableCell>
                             <StyledTableCell
                                 align="center"
                                 sx={{ fontSize: "18px" }}
                             >
-                                Дата создания
+                                Описание
                             </StyledTableCell>
                             <StyledTableCell
                                 align="center"
                                 sx={{ fontSize: "18px" }}
                             >
-                                Действия
+                                Количество
                             </StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {wires.map((wire) => {
+                        {file.map((wire, index) => {
                             return (
-                                <StyledTableRow key={wire.id}>
+                                <StyledTableRow key={wire.hu + index}>
                                     <StyledTableCell
                                         align="center"
                                         component="th"
                                         scope="row"
                                     >
-                                        {`${wire.lastname} ${wire.name}`}
+                                        {wire.material}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {wire.rule.title}
+                                        {wire.hu}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {new Date(
-                                            wire.created_at
-                                        ).toLocaleString("ru-RU", {
-                                            day: "numeric",
-                                            month: "long",
-                                            year: "numeric",
-                                            hour: "numeric",
-                                            minute: "numeric",
-                                        })}
+                                        {wire.description}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center"></StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {wire.qnt}
+                                    </StyledTableCell>
                                 </StyledTableRow>
                             );
                         })}
                     </TableBody>
                 </Table>
-            </TableContainer> */}
+            </TableContainer>
+            <Button variant="contained" sx={{ mt: 2 }}>
+                Сохранить
+            </Button>
         </Paper>
     );
 };

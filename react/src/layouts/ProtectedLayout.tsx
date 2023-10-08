@@ -3,6 +3,7 @@ import { useAuth } from "../context/AutContext";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { axiosClient } from "../axiosClient";
 import { Preloader } from "../components/Preloader/Preloader";
+import { Box } from "@mui/material";
 
 export const ProtectedLayout = () => {
     const { user, setUser } = useAuth();
@@ -29,14 +30,14 @@ export const ProtectedLayout = () => {
     }, []);
 
     return user ? (
-        <>{load ? <Outlet /> : <Preloader />}</>
+        <Box sx={{ height: "100vh" }}>{load ? <Outlet /> : <Preloader />}</Box>
     ) : (
-        <>
+        <Box sx={{ height: "100vh" }}>
             {load ? (
                 <Navigate to="/login" state={{ from: location }} replace />
             ) : (
                 <Preloader />
             )}
-        </>
+        </Box>
     );
 };
