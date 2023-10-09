@@ -13,7 +13,13 @@ class Wire extends Model
         "material",
         "hu",
         "description",
+        "batch",
         "qnt",
-
+        "invoice_id",
+        "supplier_id",
+        "area",
+        "ordered",
+        "scanned",
+        "storage_bin"
     ];
 }
