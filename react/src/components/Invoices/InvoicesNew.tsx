@@ -56,7 +56,7 @@ export const InvoicesNew = () => {
         try {
             const resp = await axiosClient.post("/invoice", {
                 number: getValues("number"),
-                date: getValues("ReactDatepicker").toLocaleString("ru-RU", {
+                date: getValues("ReactDatepicker").toLocaleString("en-US", {
                     day: "numeric",
                     month: "numeric",
                     year: "numeric",

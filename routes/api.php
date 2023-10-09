@@ -35,5 +35,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/rules', [RuleController::class, 'index']);
     Route::post('/invoice', [InvoiceController::class, 'create']);
     Route::get('/invoices', [InvoiceController::class, 'index']);
-    Route::post('/import', [WireController::class, 'import']);
+    Route::post('/wires_create', [WireController::class, 'create']);
 });
