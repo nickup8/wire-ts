@@ -27,8 +27,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const navigate = useNavigate();
-
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
         backgroundColor: theme.palette.action.hover,
@@ -40,6 +38,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const Invoice = ({ file, invoices }: IInvoiceProps) => {
+    const navigate = useNavigate();
     const onSubmit = async () => {
         try {
             const resp = await axiosClient.post("/wires_create", {

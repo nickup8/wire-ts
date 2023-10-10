@@ -19,4 +19,9 @@ class Supplier extends Model
     {
         return $this->hasMany(Invoice::class);
     }
+
+    public function wires(): HasMany
+    {
+        return $this->hasMany(Wire::class);
+    }
 }

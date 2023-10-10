@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Wire;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,6 +15,10 @@ class WireResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
+        $invoice = Wire::find($this->id)->invoice;
+        $supplier = Wire::find($this->id)->supplier;
+
         return [
             "id" => $this->id,
             "material" => $this->material,
@@ -21,10 +26,11 @@ class WireResource extends JsonResource
             "description" => $this->description,
             "batch" => $this->batch,
             "qnt" => $this->qnt,
-            "order" => $this->order_id,
-            "supplier" => $this->supplier_id,
-            "aria" => $this->aria,
+            "invoice" => $invoice,
+            "supplier" => $supplier,
+            "area" => $this->area,
             "storage_bin" => $this->storage_bin,
+            "created_at" => $this->created_at,
         ];
     }
 }

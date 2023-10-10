@@ -23,8 +23,8 @@ class WireRequest extends FormRequest
     {
         return [
             "batch" => "string|required|max:8",
-            "invoice_id" => "integer|required",
-            "supplier_id" => "integer|required",
+            "invoice_id" => "required",
+            "supplier_id" => "required",
             "wires" => "array"
         ];
     }

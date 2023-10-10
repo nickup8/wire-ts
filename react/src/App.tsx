@@ -15,6 +15,9 @@ import { StorageBinWarehouse } from "./components/Storage_bin/StorageBinWarehous
 import { StorageBinFeeding } from "./components/Storage_bin/StorageBinFeeding";
 import { Machines } from "./components/Machines/Machines";
 import { Preloader } from "./components/Preloader/Preloader";
+import { Acceptance } from "./components/Acceptance/Acceptance";
+import { Warehouse } from "./components/Warehouse/Warehouse";
+import { FeedingBuffer } from "./components/Feeding/FeedingBuffer";
 
 function App() {
     return (
@@ -23,6 +26,17 @@ function App() {
             <Route element={<ProtectedLayout />}>
                 <Route path="/" element={<Logistic />}>
                     <Route index path="/" element={<Dashboard />} />
+                    <Route index path="/warehouse" element={<Warehouse />} />
+                    <Route
+                        index
+                        path="/warehouse/acceptance"
+                        element={<Acceptance />}
+                    />
+                    <Route
+                        index
+                        path="/feeding/buffer"
+                        element={<FeedingBuffer />}
+                    />
                     <Route path="/users" element={<Users />} />
                     <Route path="/users/new" element={<NewUser />} />
                     <Route path="/suppliers" element={<Suppliers />} />
