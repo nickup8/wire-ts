@@ -22,3 +22,17 @@ export interface IInvoiceProps {
     file: Array<string>;
     invoices: IInvoice;
 }
+
+export interface Wire {
+    id: number;
+    material: string;
+    hu: string;
+    description: string;
+    batch: string;
+    qnt: string;
+    invoice: IInvoice;
+    supplier: Supplier;
+    area: string;
+    storage_bin: string;
+    created_at: Date;
+}
