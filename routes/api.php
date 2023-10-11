@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StorageBinController;
 use App\Http\Controllers\v1\InvoiceController;
 use App\Http\Controllers\v1\RuleController;
 use App\Http\Controllers\v1\SupplierController;
@@ -39,4 +40,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/wires_acceptance', [WireController::class, 'acceptance']);
     Route::get('/warehouse', [WireController::class, 'warehouse']);
     Route::get('/feedin_buffer', [WireController::class, 'feeding_buffer']);
+    Route::post('/storage_bin', [StorageBinController::class, 'create']);
 });
