@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
     Box,
@@ -17,6 +17,9 @@ import {
     tableCellClasses,
     TextField,
 } from "@mui/material";
+
+import { useForm } from "react-hook-form";
+import { axiosClient } from "../../axiosClient";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -38,6 +41,30 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 export const StorageBinWarehouse = () => {
+    const [count, setCount] = useState<number>(0);
+    const [loading, setLoading] = useState(false);
+
+    const form = useForm();
+
+    const { register, handleSubmit, getValues } = form;
+
+    const onSubmit = async () => {
+        setLoading(true);
+        try {
+            const resp = await axiosClient.post("/storage_bin", {
+                shelf: getValues("shelf"),
+                shelf_from: getValues("shelf_from"),
+                shelf_to: getValues("shelf_to"),
+                levels: getValues("levels"),
+            });
+            if (resp.status === 200) {
+                console.log(resp.data);
+                setCount(resp.data);
+                console.log(count * 6);
+            }
+        } catch (error: any) {}
+    };
+
     return (
         <Box>
             <Typography variant="h4" fontWeight="bold" sx={{ mb: 2 }}>
@@ -49,33 +76,51 @@ export const StorageBinWarehouse = () => {
                     <Typography variant="h6" sx={{ mb: 2 }} fontWeight="bold">
                         Добавить МХ
                     </Typography>
-                    <Stack spacing={1} component="form">
+                    <Stack
+                        spacing={1}
+                        component="form"
+                        onSubmit={handleSubmit(onSubmit)}
+                    >
                         <TextField
-                            type="text"
+                            type="number"
                             label="Номер стелажа"
                             size="small"
                             fullWidth
+                            {...register("shelf", {
+                                required: "Введите номер стелажа",
+                            })}
                         />
                         <TextField
-                            type="text"
+                            type="number"
                             label="Начальное МХ"
                             size="small"
                             fullWidth
+                            {...register("shelf_from", {
+                                required: "Введите начальное место хранения",
+                            })}
                         />
                         <TextField
-                            type="text"
+                            type="number"
                             label="Конечное МХ"
                             size="small"
                             fullWidth
+                            {...register("shelf_to", {
+                                required: "Введите конечное место хранения",
+                            })}
                         />
                         <TextField
-                            type="text"
+                            type="number"
                             label="Количество уровней"
                             size="small"
                             fullWidth
+                            {...register("levels", {
+                                required: "Введите количество уровней",
+                            })}
                         />
                         <Box>
-                            <Button variant="contained">Добавить</Button>
+                            <Button variant="contained" type="submit">
+                                Добавить
+                            </Button>
                         </Box>
                     </Stack>
                 </Paper>
