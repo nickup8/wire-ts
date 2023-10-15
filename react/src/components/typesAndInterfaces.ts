@@ -36,3 +36,12 @@ export interface Wire {
     storage_bin: string;
     created_at: Date;
 }
+
+export interface IStorageBin {
+    id: number;
+    shelf: string;
+    shelf_from: number;
+    shelf_to: number;
+    levels: number;
+    count_shelfs: number;
+}
