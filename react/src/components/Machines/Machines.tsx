@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 
 import {
     Box,
@@ -6,7 +6,7 @@ import {
     Paper,
     Button,
     Typography,
-    Divider,
+    IconButton,
     TableContainer,
     Table,
     TableRow,
@@ -17,6 +17,12 @@ import {
     tableCellClasses,
     TextField,
 } from "@mui/material";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import { Link } from "react-router-dom";
+import { axiosClient } from "../../axiosClient";
+import { Preloader } from "../Preloader/Preloader";
+import { IMachine } from "../typesAndInterfaces";
+import { useForm } from "react-hook-form";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -39,101 +45,167 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const Machines = () => {
+    const [machines, setMachines] = useState<IMachine[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    const form = useForm();
+
+    const { register, handleSubmit, getValues, resetField } = form;
+
+    useEffect(() => {
+        setLoading(true);
+        axiosClient.get("/machines").then((response) => {
+            setMachines(response.data.data);
+            setLoading(false);
+        });
+    }, []);
+
+    const onSubmit = async () => {
+        try {
+            const resp = await axiosClient.post("/machine_new", {
+                name: getValues().name,
+                number: getValues().number,
+            });
+            if (resp.status === 201) {
+                setMachines([...machines, resp.data.data]);
+            }
+        } catch (error) {}
+    };
+
     return (
-        <Box>
-            <Typography variant="h4" fontWeight="bold" sx={{ mb: 2 }}>
-                Оборудование
-            </Typography>
-
-            <Stack direction="row" spacing={2}>
-                <Paper sx={{ p: 2, width: "420px", textAlign: "center" }}>
-                    <Typography variant="h6" sx={{ mb: 2 }} fontWeight="bold">
-                        Добавить оборудование
+        <>
+            {!loading ? (
+                <Box sx={{ height: "100%" }}>
+                    <Typography variant="h4" fontWeight="bold" sx={{ mb: 2 }}>
+                        Оборудование
                     </Typography>
-                    <Stack spacing={1} component="form">
-                        <TextField
-                            type="text"
-                            label="Номер"
-                            size="small"
-                            fullWidth
-                        />
-                        <TextField
-                            type="text"
-                            label="Название (модель)"
-                            size="small"
-                            fullWidth
-                        />
-                        <Box>
-                            <Button variant="contained">Добавить</Button>
-                        </Box>
-                    </Stack>
-                </Paper>
-                <Paper sx={{ p: 2, width: "100%" }}>
-                    <TableContainer sx={{ mt: 2 }}>
-                        <Table aria-label="customized table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Фамилия Имя
-                                    </StyledTableCell>
 
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Роль
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Дата создания
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Действия
-                                    </StyledTableCell>
-                                </TableRow>
-                            </TableHead>
-                            {/* <TableBody>
-                                {users.map((user: User) => {
-                                    return (
-                                        <StyledTableRow key={user.id}>
+                    <Stack direction="row" spacing={2}>
+                        <Box sx={{ width: "420px" }}>
+                            <Paper sx={{ p: 2, textAlign: "center" }}>
+                                <Typography
+                                    variant="h6"
+                                    sx={{ mb: 2 }}
+                                    fontWeight="bold"
+                                >
+                                    Добавить оборудование
+                                </Typography>
+                                <Stack
+                                    spacing={1}
+                                    component="form"
+                                    onSubmit={handleSubmit(onSubmit)}
+                                >
+                                    <TextField
+                                        type="text"
+                                        label="Номер"
+                                        size="small"
+                                        fullWidth
+                                        {...register("number", {
+                                            required: true,
+                                        })}
+                                    />
+                                    <TextField
+                                        type="text"
+                                        label="Название (модель)"
+                                        size="small"
+                                        fullWidth
+                                        {...register("name", {
+                                            required: true,
+                                        })}
+                                    />
+                                    <Box>
+                                        <Button
+                                            variant="contained"
+                                            type="submit"
+                                        >
+                                            Добавить
+                                        </Button>
+                                    </Box>
+                                </Stack>
+                            </Paper>
+                        </Box>
+                        <Paper sx={{ p: 2, width: "100%" }}>
+                            <TableContainer sx={{ mt: 2 }}>
+                                <Table aria-label="customized table">
+                                    <TableHead>
+                                        <TableRow>
                                             <StyledTableCell
                                                 align="center"
-                                                component="th"
-                                                scope="row"
+                                                sx={{ fontSize: "18px" }}
                                             >
-                                                {`${user.lastname} ${user.name}`}
+                                                Номер машины
                                             </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {user.rule.title}
+
+                                            <StyledTableCell
+                                                align="center"
+                                                sx={{ fontSize: "18px" }}
+                                            >
+                                                Наименовани (модель)
                                             </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {new Date(
-                                                    user.created_at
-                                                ).toLocaleString("ru-RU", {
-                                                    day: "numeric",
-                                                    month: "long",
-                                                    year: "numeric",
-                                                    hour: "numeric",
-                                                    minute: "numeric",
-                                                })}
+                                            <StyledTableCell
+                                                align="center"
+                                                sx={{ fontSize: "18px" }}
+                                            >
+                                                Дата создания
                                             </StyledTableCell>
-                                            <StyledTableCell align="center"></StyledTableCell>
-                                        </StyledTableRow>
-                                    );
-                                })}
-                            </TableBody> */}
-                        </Table>
-                    </TableContainer>
-                </Paper>
-            </Stack>
-        </Box>
+                                            <StyledTableCell
+                                                align="center"
+                                                sx={{ fontSize: "18px" }}
+                                            >
+                                                Действия
+                                            </StyledTableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {machines.map((machine: IMachine) => {
+                                            return (
+                                                <StyledTableRow
+                                                    key={machine.id}
+                                                >
+                                                    <StyledTableCell
+                                                        align="center"
+                                                        component="th"
+                                                        scope="row"
+                                                    >
+                                                        {machine.number}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell align="center">
+                                                        {machine.name}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell align="center">
+                                                        {new Date(
+                                                            machine.created_at
+                                                        ).toLocaleString(
+                                                            "ru-RU",
+                                                            {
+                                                                day: "numeric",
+                                                                month: "long",
+                                                                year: "numeric",
+                                                                hour: "numeric",
+                                                                minute: "numeric",
+                                                            }
+                                                        )}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell align="center">
+                                                        <IconButton
+                                                            component={Link}
+                                                            to={`/machines/${machine.id}`}
+                                                        >
+                                                            <SettingsOutlinedIcon />
+                                                        </IconButton>
+                                                    </StyledTableCell>
+                                                </StyledTableRow>
+                                            );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Paper>
+                    </Stack>
+                </Box>
+            ) : (
+                <Preloader />
+            )}
+        </>
     );
 };

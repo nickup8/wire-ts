@@ -18,6 +18,7 @@ import { Preloader } from "./components/Preloader/Preloader";
 import { Acceptance } from "./components/Acceptance/Acceptance";
 import { Warehouse } from "./components/Warehouse/Warehouse";
 import { FeedingBuffer } from "./components/Feeding/FeedingBuffer";
+import { MachineSetting } from "./components/Machines/MachineSetting";
 
 function App() {
     return (
@@ -52,6 +53,7 @@ function App() {
                         element={<StorageBinFeeding />}
                     />
                     <Route path="/machines" element={<Machines />} />
+                    <Route path="/machines/:id" element={<MachineSetting />} />
                     <Route path="/load" element={<Preloader />} />
                 </Route>
             </Route>

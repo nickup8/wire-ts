@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MachineController;
 use App\Http\Controllers\StorageBinController;
 use App\Http\Controllers\StorageBinFeedingController;
+use App\Http\Controllers\StorageBinFeedingListController;
 use App\Http\Controllers\StorageBinListController;
 use App\Http\Controllers\v1\InvoiceController;
 use App\Http\Controllers\v1\RuleController;
@@ -46,4 +48,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/storage_bin_list', [StorageBinListController::class, 'create']);
     Route::get('/storage_bin_list', [StorageBinListController::class, 'index']);
     Route::post('/storage_bin_feeding', [StorageBinFeedingController::class, 'create']);
+    Route::post('/storage_bin_feeding_list', [StorageBinFeedingListController::class, 'create']);
+    Route::get('/storage_bin_feeding_list', [StorageBinFeedingListController::class, 'index']);
+    Route::post('/machine_new', [MachineController::class, 'create']);
+    Route::get('/machines', [MachineController::class, 'index']);
+    Route::get('/machines/{id}', [MachineController::class, 'view']);
+    Route::get('storage_bin_feeding_machine', [StorageBinFeedingController::class, "machine"]);
 });

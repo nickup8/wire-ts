@@ -30,4 +30,9 @@ class StorageBinFeedingController extends Controller
         };
         return $count;
     }
+
+    public function machine()
+    {
+        return StorageBinFeeding::all();
+    }
 }
