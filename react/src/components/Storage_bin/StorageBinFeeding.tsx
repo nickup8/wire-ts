@@ -1,11 +1,10 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import {
     Box,
     Stack,
     Paper,
     Button,
     Typography,
-    Divider,
     TableContainer,
     Table,
     TableRow,
@@ -16,6 +15,10 @@ import {
     tableCellClasses,
     TextField,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { axiosClient } from "../../axiosClient";
+import { IStorageBinFedding } from "../typesAndInterfaces";
+import { Preloader } from "../Preloader/Preloader";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -37,119 +40,236 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 export const StorageBinFeeding = () => {
+    const form = useForm();
+    const { register, getValues, handleSubmit, resetField } = form;
+    const [storageList, setStorageList] = useState<IStorageBinFedding[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setLoading(true);
+        axiosClient.get("/storage_bin_feeding_list").then((response) => {
+            setStorageList(response.data.data);
+            setLoading(false);
+        });
+    }, []);
+
+    const onSubmit = async () => {
+        setLoading(true);
+        let count = 0;
+        try {
+            const res = await axiosClient.post("/storage_bin_feeding", {
+                rack: getValues("rack"),
+                shelf_from: getValues("shelf_from"),
+                shelf_to: getValues("shelf_to"),
+                level_from: getValues("level_from"),
+                level_to: getValues("level_to"),
+            });
+            if (res.status === 200) {
+                count = res.data;
+                const response = await axiosClient.post(
+                    "/storage_bin_feeding_list",
+                    {
+                        rack: getValues("rack"),
+                        shelf_from: getValues("shelf_from"),
+                        shelf_to: getValues("shelf_to"),
+                        level_from: getValues("level_from"),
+                        level_to: getValues("level_to"),
+                        count_shelfs: count,
+                    }
+                );
+                if (response.status === 201) {
+                    setStorageList([...storageList, response.data]);
+                    setLoading(false);
+                    resetField("rack");
+                    resetField("shelf_from");
+                    resetField("shelf_to");
+                    resetField("level_from");
+                    resetField("level_to");
+                }
+            }
+        } catch (error) {}
+    };
     return (
-        <Box>
-            <Typography variant="h4" fontWeight="bold" sx={{ mb: 2 }}>
-                Места хранения на фидинге
-            </Typography>
-
-            <Stack direction="row" spacing={2}>
-                <Paper sx={{ p: 2, width: "420px", textAlign: "center" }}>
-                    <Typography variant="h6" sx={{ mb: 2 }} fontWeight="bold">
-                        Добавить МХ
+        <>
+            {!loading ? (
+                <Box>
+                    <Typography variant="h4" fontWeight="bold" sx={{ mb: 2 }}>
+                        Места хранения на фидинге
                     </Typography>
-                    <Stack spacing={1} component="form">
-                        <TextField
-                            type="text"
-                            label="Rack"
-                            size="small"
-                            fullWidth
-                        />
-                        <TextField
-                            type="text"
-                            label="Начальное МХ"
-                            size="small"
-                            fullWidth
-                        />
-                        <TextField
-                            type="text"
-                            label="Конечное МХ"
-                            size="small"
-                            fullWidth
-                        />
-                        <TextField
-                            type="text"
-                            label="Количество уровней"
-                            size="small"
-                            fullWidth
-                        />
-                        <Box>
-                            <Button variant="contained">Добавить</Button>
-                        </Box>
-                    </Stack>
-                </Paper>
-                <Paper sx={{ p: 2, width: "100%" }}>
-                    <TableContainer sx={{ mt: 2 }}>
-                        <Table aria-label="customized table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Стелаж
-                                    </StyledTableCell>
 
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Начальное МХ
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Конечное МХ
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Количество уровней
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Всего МХ
-                                    </StyledTableCell>
-                                </TableRow>
-                            </TableHead>
-                            {/* <TableBody>
-                                {users.map((user: User) => {
-                                    return (
-                                        <StyledTableRow key={user.id}>
-                                            <StyledTableCell
-                                                align="center"
-                                                component="th"
-                                                scope="row"
-                                            >
-                                                {`${user.lastname} ${user.name}`}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {user.rule.title}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {new Date(
-                                                    user.created_at
-                                                ).toLocaleString("ru-RU", {
-                                                    day: "numeric",
-                                                    month: "long",
-                                                    year: "numeric",
-                                                    hour: "numeric",
-                                                    minute: "numeric",
-                                                })}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center"></StyledTableCell>
-                                        </StyledTableRow>
-                                    );
-                                })}
-                            </TableBody> */}
-                        </Table>
-                    </TableContainer>
-                </Paper>
-            </Stack>
-        </Box>
+                    <Stack direction="row" spacing={2}>
+                        <Box sx={{ width: "420px" }}>
+                            <Paper sx={{ p: 2, textAlign: "center" }}>
+                                <Typography
+                                    variant="h6"
+                                    sx={{ mb: 2 }}
+                                    fontWeight="bold"
+                                >
+                                    Добавить МХ
+                                </Typography>
+                                <Stack
+                                    spacing={1}
+                                    component="form"
+                                    onSubmit={handleSubmit(onSubmit)}
+                                >
+                                    <TextField
+                                        type="text"
+                                        label="Rack"
+                                        size="small"
+                                        fullWidth
+                                        {...register("rack", {
+                                            required: true,
+                                        })}
+                                    />
+                                    <TextField
+                                        type="text"
+                                        label="Начальное МХ"
+                                        size="small"
+                                        fullWidth
+                                        {...register("shelf_from", {
+                                            required: true,
+                                        })}
+                                    />
+                                    <TextField
+                                        type="text"
+                                        label="Конечное МХ"
+                                        size="small"
+                                        fullWidth
+                                        {...register("shelf_to", {
+                                            required: true,
+                                        })}
+                                    />
+                                    <TextField
+                                        type="text"
+                                        label="Начальный уровень"
+                                        size="small"
+                                        fullWidth
+                                        {...register("level_from", {
+                                            required: true,
+                                        })}
+                                    />
+                                    <TextField
+                                        type="text"
+                                        label="Конечный уровень"
+                                        size="small"
+                                        fullWidth
+                                        {...register("level_to", {
+                                            required: true,
+                                        })}
+                                    />
+                                    <Box>
+                                        <Button
+                                            variant="contained"
+                                            type="submit"
+                                        >
+                                            Добавить
+                                        </Button>
+                                    </Box>
+                                </Stack>
+                            </Paper>
+                        </Box>
+                        <Paper sx={{ p: 2, width: "100%" }}>
+                            {storageList.length ? (
+                                <TableContainer sx={{ mt: 2 }}>
+                                    <Table aria-label="customized table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <StyledTableCell
+                                                    align="center"
+                                                    sx={{ fontSize: "18px" }}
+                                                >
+                                                    Стелаж
+                                                </StyledTableCell>
+
+                                                <StyledTableCell
+                                                    align="center"
+                                                    sx={{ fontSize: "18px" }}
+                                                >
+                                                    Начальное МХ
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    align="center"
+                                                    sx={{ fontSize: "18px" }}
+                                                >
+                                                    Конечное МХ
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    align="center"
+                                                    sx={{ fontSize: "18px" }}
+                                                >
+                                                    Начальный уровень
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    align="center"
+                                                    sx={{ fontSize: "18px" }}
+                                                >
+                                                    Конечный уровень
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    align="center"
+                                                    sx={{ fontSize: "18px" }}
+                                                >
+                                                    Всего МХ
+                                                </StyledTableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {storageList.map(
+                                                (
+                                                    storage: IStorageBinFedding
+                                                ) => {
+                                                    return (
+                                                        <StyledTableRow
+                                                            key={storage.id}
+                                                        >
+                                                            <StyledTableCell
+                                                                align="center"
+                                                                component="th"
+                                                                scope="row"
+                                                            >
+                                                                {storage.rack}
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="center">
+                                                                {
+                                                                    storage.shelf_from
+                                                                }
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="center">
+                                                                {
+                                                                    storage.shelf_to
+                                                                }
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="center">
+                                                                {
+                                                                    storage.level_from
+                                                                }
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="center">
+                                                                {
+                                                                    storage.level_to
+                                                                }
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="center">
+                                                                {
+                                                                    storage.count_shelfs
+                                                                }
+                                                            </StyledTableCell>
+                                                        </StyledTableRow>
+                                                    );
+                                                }
+                                            )}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            ) : (
+                                <h1>Нет мест хранения</h1>
+                            )}
+                        </Paper>
+                    </Stack>
+                </Box>
+            ) : (
+                <Preloader />
+            )}
+        </>
     );
 };

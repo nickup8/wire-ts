@@ -45,3 +45,26 @@ export interface IStorageBin {
     levels: number;
     count_shelfs: number;
 }
+
+export interface IStorageBinFedding {
+    id: number;
+    rack: string;
+    shelf_from: number;
+    shelf_to: number;
+    level_from: number;
+    level_to: number;
+    count_shelfs: number;
+}
+
+export interface IMachine {
+    id: number;
+    number: string;
+    name: string;
+    created_at: Date;
+}
+
+export interface ISrorageFeeding {
+    id: number;
+    name: string;
+    komax_id: number;
+}
