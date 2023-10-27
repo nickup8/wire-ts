@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BindShelfRequest;
+use App\Http\Requests\MachinesShelfRequest;
 use App\Http\Requests\StorageBinFeedingRequest;
+use App\Http\Resources\StorageBinFeedingResource;
+use App\Models\StorageBin;
 use App\Models\StorageBinFeeding;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StorageBinFeedingController extends Controller
 {
@@ -31,8 +36,23 @@ class StorageBinFeedingController extends Controller
         return $count;
     }
 
-    public function machine()
+    public function machine(MachinesShelfRequest $request)
     {
-        return StorageBinFeeding::all();
+        $data = $request->validated();
+
+        $shelfs = $data["storage_bin"];
+        foreach ($shelfs as $shelf) {
+            // $storages->where("name", "=", $shelf["name"]);
+            DB::table("storage_bin_feedings")->where("name", "=", $shelf["name"])->update(["machine_id" => $data["machine_id"]]);
+        }
+
+        return StorageBinFeedingResource::collection(StorageBinFeeding::all()->where("machine_id", "=", $data["machine_id"]));
+    }
+
+    public function bind_shelfs(BindShelfRequest $request)
+    {
+        $data = $request->validated();
+        $id = $data["machine_id"];
+        return StorageBinFeedingResource::collection(StorageBinFeeding::all()->where("machine_id", "=", $id));;
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MachinesShelfRequest extends FormRequest
+class BindShelfRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class MachinesShelfRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "storage_bin" => "required",
-            "machine_id" => "required",
+            "machine_id" => 'required'
         ];
     }
 }
