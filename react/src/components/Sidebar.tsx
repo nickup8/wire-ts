@@ -25,6 +25,7 @@ import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturi
 
 import { useAppSelector } from "../hooks";
 import { useState } from "react";
+import { useAuth } from "../context/AutContext";
 
 const drawerWidth = 240;
 
@@ -34,6 +35,7 @@ export const Sidebar = () => {
     const [openSetting, setOpenSetting] = useState(false);
     const [openDocuments, setOpenDocuments] = useState(false);
     const open = useAppSelector((state) => state.drawer.open);
+    const { user } = useAuth();
     return (
         <Drawer
             sx={{
@@ -49,172 +51,203 @@ export const Sidebar = () => {
             open={open}
         >
             <Toolbar />
-            <List>
-                <ListItemButton component={Link} to="/">
-                    <ListItemIcon>
-                        <DashboardIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Панель" />
-                </ListItemButton>
-                <ListItemButton
-                    onClick={() => setOpenWarehouse(!openWarehouse)}
-                >
-                    <ListItemIcon>
-                        <WarehouseIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Склад" />
-                    {openWarehouse ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </ListItemButton>
-                <Collapse in={openWarehouse} timeout="auto" unmountOnExit>
-                    <List component="div">
-                        <ListItemButton
-                            sx={{ pl: 4 }}
-                            component={Link}
-                            to="/warehouse"
-                        >
-                            <ListItemIcon>
-                                <AppsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Места хранения" />
-                        </ListItemButton>
-                        <ListItemButton
-                            sx={{ pl: 4 }}
-                            component={Link}
-                            to="/warehouse/acceptance"
-                        >
-                            <ListItemIcon>
-                                <SystemUpdateAltIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Зона приемки" />
-                        </ListItemButton>
-                        <ListItemButton
-                            sx={{ pl: 4 }}
-                            component={NavLink}
-                            to="/warehouse/marriage"
-                        >
-                            <ListItemIcon>
-                                <CancelIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Изолятор брака" />
-                        </ListItemButton>
-                    </List>
-                </Collapse>
-                <ListItemButton onClick={() => setOpenFeeding(!openFeeding)}>
-                    <ListItemIcon>
-                        <Grid4x4Icon />
-                    </ListItemIcon>
-                    <ListItemText primary="Фидинг" />
-                    {openFeeding ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </ListItemButton>
-                <Collapse in={openFeeding} timeout="auto" unmountOnExit>
-                    <List component="div">
-                        <ListItemButton
-                            component={Link}
-                            to="/feeding"
-                            sx={{ pl: 4 }}
-                        >
-                            <ListItemIcon>
-                                <AppsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Места хранения" />
-                        </ListItemButton>
-                        <ListItemButton
-                            component={Link}
-                            to="/feeding/buffer"
-                            sx={{ pl: 4 }}
-                        >
-                            <ListItemIcon>
-                                <SystemUpdateAltIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Буферная зона" />
-                        </ListItemButton>
-                    </List>
-                </Collapse>
-                <ListItemButton
-                    onClick={() => setOpenDocuments(!openDocuments)}
-                >
-                    <ListItemIcon>
-                        <AttachFileIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Документы" />
-                    {openDocuments ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </ListItemButton>
-                <Collapse in={openDocuments} timeout="auto" unmountOnExit>
-                    <List component="div">
-                        <ListItemButton
-                            sx={{ pl: 4 }}
-                            component={Link}
-                            to="/invoices"
-                        >
-                            <ListItemIcon>
-                                <CreateNewFolderIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Накладные" />
-                        </ListItemButton>
-                    </List>
-                </Collapse>
-                <ListItemButton onClick={() => setOpenSetting(!openSetting)}>
-                    <ListItemIcon>
-                        <SettingsIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Настройки" />
-                    {openSetting ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </ListItemButton>
-                <Collapse in={openSetting} timeout="auto" unmountOnExit>
-                    <List component="div">
-                        <ListItemButton
-                            sx={{ pl: 4 }}
-                            component={NavLink}
-                            to="/users"
-                        >
-                            <ListItemIcon>
-                                <GroupIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Пользователи" />
-                        </ListItemButton>
-                        <ListItemButton
-                            sx={{ pl: 4 }}
-                            component={Link}
-                            to="/suppliers"
-                        >
-                            <ListItemIcon>
-                                <SystemUpdateAltIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Поставщики" />
-                        </ListItemButton>
-                        <ListItemButton
-                            sx={{ pl: 4 }}
-                            component={Link}
-                            to="/storage_bin_warehouse"
-                        >
-                            <ListItemIcon>
-                                <WarehouseIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="МХ склад" />
-                        </ListItemButton>
-                        <ListItemButton
-                            sx={{ pl: 4 }}
-                            component={Link}
-                            to="/storage_bin_feeding"
-                        >
-                            <ListItemIcon>
-                                <Grid4x4Icon />
-                            </ListItemIcon>
-                            <ListItemText primary="МХ фидинг" />
-                        </ListItemButton>
-                        <ListItemButton
-                            sx={{ pl: 4 }}
-                            component={Link}
-                            to="/machines"
-                        >
-                            <ListItemIcon>
-                                <SystemUpdateAltIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Оборудование" />
-                        </ListItemButton>
-                    </List>
-                </Collapse>
-            </List>
+            {user?.rule.title === "Логистика" ? (
+                <List>
+                    <ListItemButton component={Link} to="/">
+                        <ListItemIcon>
+                            <DashboardIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Панель" />
+                    </ListItemButton>
+                    <ListItemButton
+                        onClick={() => setOpenWarehouse(!openWarehouse)}
+                    >
+                        <ListItemIcon>
+                            <WarehouseIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Склад" />
+                        {openWarehouse ? (
+                            <ExpandLessIcon />
+                        ) : (
+                            <ExpandMoreIcon />
+                        )}
+                    </ListItemButton>
+                    <Collapse in={openWarehouse} timeout="auto" unmountOnExit>
+                        <List component="div">
+                            <ListItemButton
+                                sx={{ pl: 4 }}
+                                component={Link}
+                                to="/warehouse"
+                            >
+                                <ListItemIcon>
+                                    <AppsIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Места хранения" />
+                            </ListItemButton>
+                            <ListItemButton
+                                sx={{ pl: 4 }}
+                                component={Link}
+                                to="/warehouse/acceptance"
+                            >
+                                <ListItemIcon>
+                                    <SystemUpdateAltIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Зона приемки" />
+                            </ListItemButton>
+                            <ListItemButton
+                                sx={{ pl: 4 }}
+                                component={NavLink}
+                                to="/warehouse/marriage"
+                            >
+                                <ListItemIcon>
+                                    <CancelIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Изолятор брака" />
+                            </ListItemButton>
+                        </List>
+                    </Collapse>
+                    <ListItemButton
+                        onClick={() => setOpenFeeding(!openFeeding)}
+                    >
+                        <ListItemIcon>
+                            <Grid4x4Icon />
+                        </ListItemIcon>
+                        <ListItemText primary="Фидинг" />
+                        {openFeeding ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    </ListItemButton>
+                    <Collapse in={openFeeding} timeout="auto" unmountOnExit>
+                        <List component="div">
+                            <ListItemButton
+                                component={Link}
+                                to="/feeding"
+                                sx={{ pl: 4 }}
+                            >
+                                <ListItemIcon>
+                                    <AppsIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Места хранения" />
+                            </ListItemButton>
+                            <ListItemButton
+                                component={Link}
+                                to="/feeding/buffer"
+                                sx={{ pl: 4 }}
+                            >
+                                <ListItemIcon>
+                                    <SystemUpdateAltIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Буферная зона" />
+                            </ListItemButton>
+                        </List>
+                    </Collapse>
+                    <ListItemButton
+                        onClick={() => setOpenDocuments(!openDocuments)}
+                    >
+                        <ListItemIcon>
+                            <AttachFileIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Документы" />
+                        {openDocuments ? (
+                            <ExpandLessIcon />
+                        ) : (
+                            <ExpandMoreIcon />
+                        )}
+                    </ListItemButton>
+                    <Collapse in={openDocuments} timeout="auto" unmountOnExit>
+                        <List component="div">
+                            <ListItemButton
+                                sx={{ pl: 4 }}
+                                component={Link}
+                                to="/invoices"
+                            >
+                                <ListItemIcon>
+                                    <CreateNewFolderIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Накладные" />
+                            </ListItemButton>
+                        </List>
+                    </Collapse>
+                    <ListItemButton
+                        onClick={() => setOpenSetting(!openSetting)}
+                    >
+                        <ListItemIcon>
+                            <SettingsIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Настройки" />
+                        {openSetting ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    </ListItemButton>
+                    <Collapse in={openSetting} timeout="auto" unmountOnExit>
+                        <List component="div">
+                            <ListItemButton
+                                sx={{ pl: 4 }}
+                                component={NavLink}
+                                to="/users"
+                            >
+                                <ListItemIcon>
+                                    <GroupIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Пользователи" />
+                            </ListItemButton>
+                            <ListItemButton
+                                sx={{ pl: 4 }}
+                                component={Link}
+                                to="/suppliers"
+                            >
+                                <ListItemIcon>
+                                    <SystemUpdateAltIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Поставщики" />
+                            </ListItemButton>
+                            <ListItemButton
+                                sx={{ pl: 4 }}
+                                component={Link}
+                                to="/storage_bin_warehouse"
+                            >
+                                <ListItemIcon>
+                                    <WarehouseIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="МХ склад" />
+                            </ListItemButton>
+                            <ListItemButton
+                                sx={{ pl: 4 }}
+                                component={Link}
+                                to="/storage_bin_feeding"
+                            >
+                                <ListItemIcon>
+                                    <Grid4x4Icon />
+                                </ListItemIcon>
+                                <ListItemText primary="МХ фидинг" />
+                            </ListItemButton>
+                            <ListItemButton
+                                sx={{ pl: 4 }}
+                                component={Link}
+                                to="/machines"
+                            >
+                                <ListItemIcon>
+                                    <SystemUpdateAltIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Оборудование" />
+                            </ListItemButton>
+                        </List>
+                    </Collapse>
+                </List>
+            ) : user?.rule.title === "Кладовщик" ? (
+                <List>
+                    <ListItemButton component={Link} to="/w_orders">
+                        <ListItemIcon>
+                            <DashboardIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Заказы" />
+                    </ListItemButton>
+                    <ListItemButton component={Link} to="/moving">
+                        <ListItemIcon>
+                            <DashboardIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Перемещение" />
+                    </ListItemButton>
+                </List>
+            ) : (
+                <></>
+            )}
         </Drawer>
     );
 };
