@@ -20,24 +20,25 @@ import { Warehouse } from "./components/Warehouse/Warehouse";
 import { FeedingBuffer } from "./components/Feeding/FeedingBuffer";
 import { MachineSetting } from "./components/Machines/MachineSetting";
 
+import { Welcom } from "./components/Welcom";
+import { OrdersWarehouse } from "./components/Warehouse/OrdersWarehouse";
+import { Moving } from "./components/Warehouse/Moving";
+
 function App() {
     return (
         <Routes>
             <Route path="/login" element={<GuestLayout />} />
             <Route element={<ProtectedLayout />}>
                 <Route path="/" element={<Logistic />}>
-                    <Route index path="/" element={<Dashboard />} />
-                    <Route index path="/warehouse" element={<Warehouse />} />
+                    <Route path="/" index element={<Welcom />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/warehouse" element={<Warehouse />} />
                     <Route
                         index
                         path="/warehouse/acceptance"
                         element={<Acceptance />}
                     />
-                    <Route
-                        index
-                        path="/feeding/buffer"
-                        element={<FeedingBuffer />}
-                    />
+                    <Route path="/feeding/buffer" element={<FeedingBuffer />} />
                     <Route path="/users" element={<Users />} />
                     <Route path="/users/new" element={<NewUser />} />
                     <Route path="/suppliers" element={<Suppliers />} />
@@ -55,6 +56,8 @@ function App() {
                     <Route path="/machines" element={<Machines />} />
                     <Route path="/machines/:id" element={<MachineSetting />} />
                     <Route path="/load" element={<Preloader />} />
+                    <Route path="/w_orders" element={<OrdersWarehouse />} />
+                    <Route path="/moving" element={<Moving />} />
                 </Route>
             </Route>
             <Route path="*" element={<ErrorPage />} />
