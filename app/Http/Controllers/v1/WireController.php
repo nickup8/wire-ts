@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MovingWireRequest;
 use App\Http\Requests\WireRequest;
 use App\Http\Resources\WireResource;
 use App\Imports\WireImport;
+use App\Models\StorageBin;
 use App\Models\Wire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -47,6 +49,18 @@ class WireController extends Controller
     public function feeding_buffer()
     {
         $wires = Wire::all()->where("area", "2000")->where("scanned", 1);
+        return WireResource::collection($wires);
+    }
+    public function StorageBinWires(MovingWireRequest $request)
+    {
+        $data = $request->validated();
+        $storage_bin = StorageBin::where('storage_bins', $data['storage_bin'])->first();
+        if (!$storage_bin) {
+            return response()->json([
+                "message" => "МХ не существует."
+            ], 404);
+        }
+        $wires = Wire::all()->where("storage_bin", $data['storage_bin']);
         return WireResource::collection($wires);
     }
 }

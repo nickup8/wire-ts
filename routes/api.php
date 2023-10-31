@@ -55,4 +55,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/machines/{id}', [MachineController::class, 'view']);
     Route::post('storage_bin_feeding_machine', [StorageBinFeedingController::class, "machine"]);
     Route::get('bind_shelfs_feeding', [StorageBinFeedingController::class, 'bind_shelfs']);
+    Route::post("storage_bin_warehouse", [WireController::class, "StorageBinWires"]);
 });
