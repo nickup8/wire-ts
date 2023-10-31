@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MovingWireRequest;
 use App\Http\Requests\WireRequest;
+use App\Http\Requests\WireStorageRequest;
 use App\Http\Resources\WireResource;
 use App\Imports\WireImport;
 use App\Models\StorageBin;
@@ -62,5 +63,16 @@ class WireController extends Controller
         }
         $wires = Wire::all()->where("storage_bin", $data['storage_bin']);
         return WireResource::collection($wires);
+    }
+
+    public function updateStorageWire(WireStorageRequest $request)
+    {
+        $data = $request->validated();
+        $wires = $data["wires"];
+
+        foreach ($wires as $wire) {
+            DB::table("wires")->where("hu", "=", $wire["hu"])->update(["storage_bin" => $data["storage_bin"], "area" => 1000]);
+        }
+        return true;
     }
 }
