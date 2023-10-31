@@ -2,7 +2,6 @@ import {
     Paper,
     Box,
     Typography,
-    Divider,
     TextField,
     Button,
     Stack,
@@ -14,7 +13,12 @@ import {
     Table,
     TableHead,
     TableBody,
+    Alert,
 } from "@mui/material";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { axiosClient } from "../../axiosClient";
+import { Wire } from "../typesAndInterfaces";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -37,6 +41,41 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const Moving = () => {
+    const [wires, setWires] = useState<Wire[]>([]);
+    const form = useForm();
+    const [disabled, setDisabled] = useState(false);
+    const [errors, setErrors] = useState("");
+    const { register, handleSubmit, getValues, resetField } = form;
+    let wire: any = [];
+    const WireField = () => {
+        for (let i = wires.length; i < 6; i++) {
+            wire.push(i);
+        }
+    };
+    WireField();
+    const onSubmitStarageBin = async () => {
+        setErrors("");
+        try {
+            const resp = await axiosClient.post("/storage_bin_warehouse", {
+                storage_bin: getValues("storage_bin"),
+            });
+            if (resp.status === 200) {
+                setWires(resp.data.data);
+                setDisabled(true);
+                WireField();
+            }
+        } catch (error: any) {
+            if (error.response.status === 404) {
+                setErrors(error.response.data.message);
+            }
+        }
+    };
+
+    const onCancel = () => {
+        setDisabled(false);
+        resetField("storage_bin");
+    };
+
     return (
         <>
             <Typography variant="h4" fontWeight="bold" sx={{ mb: 2 }}>
@@ -46,116 +85,159 @@ export const Moving = () => {
                 <Stack spacing={4}>
                     <Box sx={{ width: "350px" }} textAlign="center">
                         <Paper sx={{ p: 4 }}>
-                            <Stack component="form" noValidate>
-                                <Typography variant="h6" sx={{ mb: 1 }}>
-                                    Введите МХ
-                                </Typography>
+                            <Stack
+                                component="form"
+                                noValidate
+                                onSubmit={handleSubmit(onSubmitStarageBin)}
+                                spacing={2}
+                            >
+                                <Typography variant="h6">Введите МХ</Typography>
                                 <TextField
                                     label="Место хранения"
                                     size="small"
+                                    {...register("storage_bin", {
+                                        required: true,
+                                    })}
+                                    disabled={disabled}
                                 />
                                 <Box>
                                     <Stack
                                         direction="row"
                                         spacing={2}
-                                        sx={{ mt: 2 }}
                                         justifyContent="center"
                                     >
-                                        <Button variant="contained">
+                                        <Button
+                                            variant="contained"
+                                            type="submit"
+                                            disabled={disabled}
+                                        >
                                             Подтвердить
                                         </Button>
-                                        <Button variant="outlined">
+                                        <Button
+                                            variant="outlined"
+                                            disabled={!disabled}
+                                            onClick={onCancel}
+                                        >
                                             Отмена
                                         </Button>
                                     </Stack>
                                 </Box>
+                                {errors && (
+                                    <Alert severity="error">{errors}</Alert>
+                                )}
                             </Stack>
                         </Paper>
                     </Box>
-                    <Box sx={{ width: "350px" }} textAlign="center">
-                        <Paper sx={{ p: 4 }}>
-                            <Typography variant="h6" sx={{ mb: 1 }}>
-                                Введите HU провода
-                            </Typography>
-                            <Stack spacing={2}>
-                                <TextField label="HU провода" size="small" />
-                                <TextField label="HU провода" size="small" />
-                                <TextField label="HU провода" size="small" />
-                                <TextField label="HU провода" size="small" />
-                                <TextField label="HU провода" size="small" />
-                                <TextField label="HU провода" size="small" />
-                                <Box>
-                                    <Button variant="contained">
-                                        Переместить
-                                    </Button>
-                                </Box>
-                            </Stack>
-                        </Paper>
-                    </Box>
-                </Stack>
-                <Paper sx={{ p: 4, width: "100%" }}>
-                    <Typography variant="h6">Место хранения:</Typography>
-                    <Typography variant="body1">
-                        Количество проводов 0/6
-                    </Typography>
-                    <TableContainer sx={{ mt: 2 }}>
-                        <Table aria-label="customized table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Материал
-                                    </StyledTableCell>
 
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        Описание
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        sx={{ fontSize: "18px" }}
-                                    >
-                                        HU
-                                    </StyledTableCell>
-                                </TableRow>
-                            </TableHead>
-                            {/* <TableBody>
-                                {suppliers.map((supplier: ISupplier) => {
-                                    return (
-                                        <StyledTableRow key={supplier.id}>
+                    {disabled && (
+                        <Box sx={{ width: "350px" }} textAlign="center">
+                            <Paper sx={{ p: 4 }}>
+                                {wires.length < 6 ? (
+                                    <Box>
+                                        <Typography variant="h6" sx={{ mb: 1 }}>
+                                            Введите HU проводов
+                                        </Typography>
+                                        <Stack spacing={2}>
+                                            {wire.map(
+                                                (field: any, index: any) => {
+                                                    return (
+                                                        <TextField
+                                                            key={`${index}_${field}`}
+                                                            label={`HU провода ${
+                                                                wires.length +
+                                                                index +
+                                                                1
+                                                            }`}
+                                                        />
+                                                    );
+                                                }
+                                            )}
+                                            <Box>
+                                                <Button variant="contained">
+                                                    Переместить
+                                                </Button>
+                                            </Box>
+                                        </Stack>
+                                    </Box>
+                                ) : (
+                                    <Typography>Нет свободных мест</Typography>
+                                )}
+                            </Paper>
+                        </Box>
+                    )}
+                </Stack>
+                {disabled && (
+                    <Paper sx={{ p: 4, width: "100%" }}>
+                        <Typography variant="h6">
+                            Место хранения: {getValues("storage_bin")}
+                        </Typography>
+                        <Typography variant="body1">
+                            {`Количество проводов ${wires.length}/6`}
+                        </Typography>
+                        {wires.length > 0 ? (
+                            <TableContainer sx={{ mt: 2 }}>
+                                <Table aria-label="customized table">
+                                    <TableHead>
+                                        <TableRow>
                                             <StyledTableCell
                                                 align="center"
-                                                component="th"
-                                                scope="row"
+                                                sx={{ fontSize: "18px" }}
                                             >
-                                                {supplier.code}
+                                                Материал
                                             </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {supplier.name}
+
+                                            <StyledTableCell
+                                                align="center"
+                                                sx={{ fontSize: "18px" }}
+                                            >
+                                                Описание
                                             </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {new Date(
-                                                    supplier.created_at
-                                                ).toLocaleString("ru-RU", {
-                                                    day: "numeric",
-                                                    month: "long",
-                                                    year: "numeric",
-                                                    hour: "numeric",
-                                                    minute: "numeric",
-                                                })}
+                                            <StyledTableCell
+                                                align="center"
+                                                sx={{ fontSize: "18px" }}
+                                            >
+                                                HU
                                             </StyledTableCell>
-                                            <StyledTableCell align="center"></StyledTableCell>
-                                        </StyledTableRow>
-                                    );
-                                })}
-                            </TableBody> */}
-                        </Table>
-                    </TableContainer>
-                </Paper>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {wires.map((wire: Wire) => {
+                                            return (
+                                                <StyledTableRow key={wire.id}>
+                                                    <StyledTableCell
+                                                        align="center"
+                                                        component="th"
+                                                        scope="row"
+                                                    >
+                                                        {wire.material}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell align="center">
+                                                        {wire.description}
+                                                    </StyledTableCell>
+
+                                                    <StyledTableCell align="center">
+                                                        {wire.hu}
+                                                    </StyledTableCell>
+                                                </StyledTableRow>
+                                            );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        ) : (
+                            <Box
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                sx={{ height: "100%" }}
+                            >
+                                <Typography variant="h5" fontWeight="bold">
+                                    Место {getValues("storage_bin")} свободное
+                                </Typography>
+                            </Box>
+                        )}
+                    </Paper>
+                )}
             </Stack>
         </>
     );
