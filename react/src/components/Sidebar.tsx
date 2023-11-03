@@ -21,7 +21,6 @@ import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Grid4x4Icon from "@mui/icons-material/Grid4x4";
 import GroupIcon from "@mui/icons-material/Group";
-import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 
 import { useAppSelector } from "../hooks";
 import { useState } from "react";
@@ -93,16 +92,6 @@ export const Sidebar = () => {
                                     <SystemUpdateAltIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Зона приемки" />
-                            </ListItemButton>
-                            <ListItemButton
-                                sx={{ pl: 4 }}
-                                component={NavLink}
-                                to="/warehouse/marriage"
-                            >
-                                <ListItemIcon>
-                                    <CancelIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Изолятор брака" />
                             </ListItemButton>
                         </List>
                     </Collapse>
@@ -229,6 +218,18 @@ export const Sidebar = () => {
                             </ListItemButton>
                         </List>
                     </Collapse>
+                    <ListItemButton component={Link} to="/w_orders">
+                        <ListItemIcon>
+                            <DashboardIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Заказы" />
+                    </ListItemButton>
+                    <ListItemButton component={Link} to="/moving">
+                        <ListItemIcon>
+                            <DashboardIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Перемещение" />
+                    </ListItemButton>
                 </List>
             ) : user?.rule.title === "Кладовщик" ? (
                 <List>
