@@ -45,6 +45,7 @@ export const Moving = () => {
     const form = useForm();
     const [disabled, setDisabled] = useState(false);
     const [errors, setErrors] = useState("");
+    const [errorWires, setErrorWires] = useState("");
     const { register, handleSubmit, getValues, resetField } = form;
     let wire: any = [];
     const WireField = () => {
@@ -74,6 +75,27 @@ export const Moving = () => {
     const onCancel = () => {
         setDisabled(false);
         resetField("storage_bin");
+    };
+
+    const UpdateStorageWires = async () => {
+        try {
+            const resp = await axiosClient.post("/update_storage_bin_wire", {
+                storage_bin: getValues().storage_bin,
+                wires: getValues().wires,
+            });
+            if (resp.status === 200) {
+                setWires(resp.data.data);
+                resetField("wires");
+            }
+
+            console.log(getValues());
+        } catch (error: any) {
+            if (error.status === 422) {
+                wires
+                    ? setErrorWires("Провода не найдены")
+                    : setErrorWires("Введите hu хотябы одного провода");
+            }
+        }
     };
 
     return (
@@ -137,7 +159,14 @@ export const Moving = () => {
                                         <Typography variant="h6" sx={{ mb: 1 }}>
                                             Введите HU проводов
                                         </Typography>
-                                        <Stack spacing={2}>
+                                        <Stack
+                                            spacing={2}
+                                            component="form"
+                                            noValidate
+                                            onSubmit={handleSubmit(
+                                                UpdateStorageWires
+                                            )}
+                                        >
                                             {wire.map(
                                                 (field: any, index: any) => {
                                                     return (
@@ -148,12 +177,18 @@ export const Moving = () => {
                                                                 index +
                                                                 1
                                                             }`}
+                                                            {...register(
+                                                                `wires.${index}`
+                                                            )}
                                                         />
                                                     );
                                                 }
                                             )}
                                             <Box>
-                                                <Button variant="contained">
+                                                <Button
+                                                    variant="contained"
+                                                    type="submit"
+                                                >
                                                     Переместить
                                                 </Button>
                                             </Box>
@@ -167,76 +202,97 @@ export const Moving = () => {
                     )}
                 </Stack>
                 {disabled && (
-                    <Paper sx={{ p: 4, width: "100%" }}>
-                        <Typography variant="h6">
-                            Место хранения: {getValues("storage_bin")}
-                        </Typography>
-                        <Typography variant="body1">
-                            {`Количество проводов ${wires.length}/6`}
-                        </Typography>
-                        {wires.length > 0 ? (
-                            <TableContainer sx={{ mt: 2 }}>
-                                <Table aria-label="customized table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <StyledTableCell
-                                                align="center"
-                                                sx={{ fontSize: "18px" }}
-                                            >
-                                                Материал
-                                            </StyledTableCell>
-
-                                            <StyledTableCell
-                                                align="center"
-                                                sx={{ fontSize: "18px" }}
-                                            >
-                                                Описание
-                                            </StyledTableCell>
-                                            <StyledTableCell
-                                                align="center"
-                                                sx={{ fontSize: "18px" }}
-                                            >
-                                                HU
-                                            </StyledTableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {wires.map((wire: Wire) => {
-                                            return (
-                                                <StyledTableRow key={wire.id}>
+                    <>
+                        <Box sx={{ width: "100%" }}>
+                            <Paper sx={{ p: 4 }}>
+                                <Typography variant="h6">
+                                    Место хранения: {getValues("storage_bin")}
+                                </Typography>
+                                <Typography variant="body1">
+                                    {`Количество проводов ${wires.length}/6`}
+                                </Typography>
+                                {wires.length > 0 ? (
+                                    <TableContainer sx={{ mt: 2 }}>
+                                        <Table aria-label="customized table">
+                                            <TableHead>
+                                                <TableRow>
                                                     <StyledTableCell
                                                         align="center"
-                                                        component="th"
-                                                        scope="row"
+                                                        sx={{
+                                                            fontSize: "18px",
+                                                        }}
                                                     >
-                                                        {wire.material}
-                                                    </StyledTableCell>
-                                                    <StyledTableCell align="center">
-                                                        {wire.description}
+                                                        Материал
                                                     </StyledTableCell>
 
-                                                    <StyledTableCell align="center">
-                                                        {wire.hu}
+                                                    <StyledTableCell
+                                                        align="center"
+                                                        sx={{
+                                                            fontSize: "18px",
+                                                        }}
+                                                    >
+                                                        Описание
                                                     </StyledTableCell>
-                                                </StyledTableRow>
-                                            );
-                                        })}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        ) : (
-                            <Box
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                sx={{ height: "100%" }}
-                            >
-                                <Typography variant="h5" fontWeight="bold">
-                                    Место {getValues("storage_bin")} свободное
-                                </Typography>
-                            </Box>
+                                                    <StyledTableCell
+                                                        align="center"
+                                                        sx={{
+                                                            fontSize: "18px",
+                                                        }}
+                                                    >
+                                                        HU
+                                                    </StyledTableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {wires.map((wire: Wire) => {
+                                                    return (
+                                                        <StyledTableRow
+                                                            key={wire.id}
+                                                        >
+                                                            <StyledTableCell
+                                                                align="center"
+                                                                component="th"
+                                                                scope="row"
+                                                            >
+                                                                {wire.material}
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="center">
+                                                                {
+                                                                    wire.description
+                                                                }
+                                                            </StyledTableCell>
+
+                                                            <StyledTableCell align="center">
+                                                                {wire.hu}
+                                                            </StyledTableCell>
+                                                        </StyledTableRow>
+                                                    );
+                                                })}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                ) : (
+                                    <Box
+                                        display="flex"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                        sx={{ height: "100%" }}
+                                    >
+                                        <Typography
+                                            variant="h5"
+                                            fontWeight="bold"
+                                        >
+                                            Место {getValues("storage_bin")}{" "}
+                                            свободное
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Paper>
+                        </Box>
+                        {errorWires && (
+                            <Alert severity="error">{errorWires}</Alert>
                         )}
-                    </Paper>
+                    </>
                 )}
             </Stack>
         </>

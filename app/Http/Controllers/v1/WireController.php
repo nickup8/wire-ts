@@ -71,8 +71,8 @@ class WireController extends Controller
         $wires = $data["wires"];
 
         foreach ($wires as $wire) {
-            DB::table("wires")->where("hu", "=", $wire["hu"])->update(["storage_bin" => $data["storage_bin"], "area" => 1000]);
+            DB::table("wires")->where("hu", "=", $wire)->update(["storage_bin" => $data["storage_bin"], "area" => 1000]);
         }
-        return true;
+        return WireResource::collection(Wire::all()->where("storage_bin", "=", $data["storage_bin"]));
     }
 }
