@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MachineController;
+use App\Http\Controllers\OrderFeedingController;
 use App\Http\Controllers\StorageBinController;
 use App\Http\Controllers\StorageBinFeedingController;
 use App\Http\Controllers\StorageBinFeedingListController;
@@ -57,4 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('bind_shelfs_feeding', [StorageBinFeedingController::class, 'bind_shelfs']);
     Route::post("storage_bin_warehouse", [WireController::class, "StorageBinWires"]);
     Route::post("update_storage_bin_wire", [WireController::class, "updateStorageWire"]);
+    Route::post("create_order_feeding", [OrderFeedingController::class, 'create']);
+    Route::get("orders_feeding_machine", [OrderFeedingController::class, 'orders_machine']);
+    Route::get("orders_feeding", [OrderFeedingController::class, 'index']);
 });
