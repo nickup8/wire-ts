@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { axiosClient } from "../../axiosClient";
-import { IMachine, ISrorageFeeding } from "../typesAndInterfaces";
+import { IMachine } from "../typesAndInterfaces";
 
 export const MachineSetting = () => {
     const [loading, setLoading] = useState(false);
@@ -30,9 +30,9 @@ export const MachineSetting = () => {
     const { id } = useParams();
 
     const { register, getValues, control, handleSubmit } = form;
-    const [storageBinFeedin, setStorageBinFeeding] = useState<
-        ISrorageFeeding[]
-    >([]);
+    // const [storageBinFeedin, setStorageBinFeeding] = useState<
+    //     ISrorageFeeding[]
+    // >([]);
 
     useEffect(() => {
         setLoading(true);

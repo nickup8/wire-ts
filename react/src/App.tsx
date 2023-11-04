@@ -23,6 +23,8 @@ import { MachineSetting } from "./components/Machines/MachineSetting";
 import { Welcom } from "./components/Welcom";
 import { OrdersWarehouse } from "./components/Warehouse/OrdersWarehouse";
 import { Moving } from "./components/Warehouse/Moving";
+import { Komax } from "./components/Komax/Komax";
+import { MachineProvider } from "./context/MachineContext";
 
 function App() {
     return (
@@ -58,6 +60,14 @@ function App() {
                     <Route path="/load" element={<Preloader />} />
                     <Route path="/w_orders" element={<OrdersWarehouse />} />
                     <Route path="/moving" element={<Moving />} />
+                    <Route
+                        path="/komax"
+                        element={
+                            <MachineProvider>
+                                <Komax />
+                            </MachineProvider>
+                        }
+                    />
                 </Route>
             </Route>
             <Route path="*" element={<ErrorPage />} />
