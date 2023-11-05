@@ -15,13 +15,15 @@ import {
     TableHead,
     TableBody,
     Alert,
+    IconButton,
 } from "@mui/material";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 import { useForm } from "react-hook-form";
 
 import { axiosClient } from "../../axiosClient";
 import { useMachine } from "../../context/MachineContext";
-import { IMachine, Wire } from "../typesAndInterfaces";
+import { IMachine, IOrderFeeding } from "../typesAndInterfaces";
 import { Preloader } from "../Preloader/Preloader";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -47,7 +49,7 @@ export const KomaxOperator = () => {
     const [machine, setMachine] = useState<IMachine | null>(null);
     const [loading, setLoading] = useState(false);
     const { machine_id, updateMachine } = useMachine();
-    const [orders, setOrders] = useState<Wire[] | null>(null);
+    const [orders, setOrders] = useState<IOrderFeeding[] | null>(null);
     const form = useForm();
     const { register, handleSubmit, getValues, reset } = form;
     useEffect(() => {
@@ -83,6 +85,20 @@ export const KomaxOperator = () => {
                     setOrders([...orders, resp.data.data]);
                 }
                 reset();
+            }
+        } catch (error) {}
+    };
+
+    const deleteOrder = async (id_order: number) => {
+        try {
+            const resp = await axiosClient.delete("/delete_order_feeding", {
+                params: {
+                    id: id_order,
+                    machine_id: machine_id,
+                },
+            });
+            if (resp.status === 200) {
+                setOrders(resp.data.data);
             }
         } catch (error) {}
     };
@@ -177,30 +193,38 @@ export const KomaxOperator = () => {
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {orders.map((wire: Wire) => {
-                                                    return (
-                                                        <StyledTableRow
-                                                            key={wire.id}
-                                                        >
-                                                            <StyledTableCell
-                                                                align="center"
-                                                                component="th"
-                                                                scope="row"
+                                                {orders.map(
+                                                    (order: IOrderFeeding) => {
+                                                        return (
+                                                            <StyledTableRow
+                                                                key={order.id}
                                                             >
-                                                                {wire.material}
-                                                            </StyledTableCell>
-                                                            <StyledTableCell align="center">
-                                                                {
-                                                                    wire.description
-                                                                }
-                                                            </StyledTableCell>
+                                                                <StyledTableCell
+                                                                    align="center"
+                                                                    component="th"
+                                                                    scope="row"
+                                                                >
+                                                                    {
+                                                                        order.material
+                                                                    }
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center"></StyledTableCell>
 
-                                                            <StyledTableCell align="center">
-                                                                {wire.hu}
-                                                            </StyledTableCell>
-                                                        </StyledTableRow>
-                                                    );
-                                                })}
+                                                                <StyledTableCell align="center">
+                                                                    <IconButton
+                                                                        onClick={() =>
+                                                                            deleteOrder(
+                                                                                order.id
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <DeleteForeverIcon />
+                                                                    </IconButton>
+                                                                </StyledTableCell>
+                                                            </StyledTableRow>
+                                                        );
+                                                    }
+                                                )}
                                             </TableBody>
                                         </Table>
                                     </TableContainer>

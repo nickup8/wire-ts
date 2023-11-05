@@ -68,3 +68,9 @@ export interface ISrorageFeeding {
     name: string;
     komax_id: number;
 }
+
+export interface IOrderFeeding {
+    id: number;
+    material: string;
+    machine: IMachine;
+}
