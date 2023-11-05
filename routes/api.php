@@ -61,4 +61,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("create_order_feeding", [OrderFeedingController::class, 'create']);
     Route::get("orders_feeding_machine", [OrderFeedingController::class, 'orders_machine']);
     Route::get("orders_feeding", [OrderFeedingController::class, 'index']);
+    Route::delete("delete_order_feeding", [OrderFeedingController::class, 'delete']);
 });
