@@ -25,6 +25,7 @@ import { OrdersWarehouse } from "./components/Warehouse/OrdersWarehouse";
 import { Moving } from "./components/Warehouse/Moving";
 import { Komax } from "./components/Komax/Komax";
 import { MachineProvider } from "./context/MachineContext";
+import { FeedingOperator } from "./components/Feeding/FeedingOperator";
 
 function App() {
     return (
@@ -60,6 +61,7 @@ function App() {
                     <Route path="/load" element={<Preloader />} />
                     <Route path="/w_orders" element={<OrdersWarehouse />} />
                     <Route path="/moving" element={<Moving />} />
+                    <Route path="/feeding" element={<FeedingOperator />} />
                     <Route
                         path="/komax"
                         element={
