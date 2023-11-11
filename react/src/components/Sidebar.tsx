@@ -236,6 +236,12 @@ export const Sidebar = () => {
                         </ListItemIcon>
                         <ListItemText primary="Комаксер" />
                     </ListItemButton>
+                    <ListItemButton component={Link} to="/feeding">
+                        <ListItemIcon>
+                            <DashboardIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Фидинг" />
+                    </ListItemButton>
                 </List>
             ) : user?.rule.title === "Кладовщик" ? (
                 <List>

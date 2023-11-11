@@ -28,7 +28,7 @@ class OrderFeedingController extends Controller
     }
     public function index()
     {
-        return OrderFeedingResource::collection(OrderFeeding::all());
+        return OrderFeedingResource::collection(OrderFeeding::paginate(10));
     }
     public function delete(DeleteOrderFeedingRequest $request)
     {
