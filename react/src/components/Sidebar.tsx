@@ -108,7 +108,7 @@ export const Sidebar = () => {
                         <List component="div">
                             <ListItemButton
                                 component={Link}
-                                to="/feeding"
+                                to="/feeding_stock"
                                 sx={{ pl: 4 }}
                             >
                                 <ListItemIcon>
@@ -118,7 +118,7 @@ export const Sidebar = () => {
                             </ListItemButton>
                             <ListItemButton
                                 component={Link}
-                                to="/feeding/buffer"
+                                to="/feeding_stock/buffer"
                                 sx={{ pl: 4 }}
                             >
                                 <ListItemIcon>
