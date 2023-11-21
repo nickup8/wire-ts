@@ -46,7 +46,7 @@ export const SelectMachine = () => {
                                         value={machine.id}
                                         key={`${machine.id}_${machine.name}`}
                                     >
-                                        {machine.name}
+                                        {`${machine.number}-${machine.name}`}
                                     </MenuItem>
                                 );
                             })}

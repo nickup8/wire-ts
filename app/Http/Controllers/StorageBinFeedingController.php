@@ -28,7 +28,8 @@ class StorageBinFeedingController extends Controller
                     $shelf = '0' . $shelf;
                 }
                 StorageBinFeeding::create([
-                    'name' => $data['rack'] . '-' . $shelf . '-' . $prefix[$level - 1]
+                    'name' => $data['rack'] . '-' . $shelf . '-' . $prefix[$level - 1],
+                    "komax_id" => 0
                 ]);
                 $count++;
             }
@@ -43,16 +44,16 @@ class StorageBinFeedingController extends Controller
         $shelfs = $data["storage_bin"];
         foreach ($shelfs as $shelf) {
             // $storages->where("name", "=", $shelf["name"]);
-            DB::table("storage_bin_feedings")->where("name", "=", $shelf["name"])->update(["machine_id" => $data["machine_id"]]);
+            DB::table("storage_bin_feedings")->where("name", "=", $shelf["name"])->update(["komax_id" => $data["machine_id"]]);
         }
 
-        return StorageBinFeedingResource::collection(StorageBinFeeding::all()->where("machine_id", "=", $data["machine_id"]));
+        return StorageBinFeedingResource::collection(StorageBinFeeding::all()->where("komax_id", "=", $data["machine_id"]));
     }
 
     public function bind_shelfs(BindShelfRequest $request)
     {
         $data = $request->validated();
         $id = $data["machine_id"];
-        return StorageBinFeedingResource::collection(StorageBinFeeding::all()->where("machine_id", "=", $id));;
+        return StorageBinFeedingResource::collection(StorageBinFeeding::all()->where("komax_id", "=", $id));;
     }
 }

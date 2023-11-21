@@ -69,7 +69,6 @@ export const MachineSetting = () => {
             setLoading(false);
         }
     };
-    console.log(shelfs);
 
     return (
         <>
@@ -181,7 +180,10 @@ export const MachineSetting = () => {
                                     {shelfs.length > 0 ? (
                                         shelfs.map((shelf: any) => {
                                             return (
-                                                <Typography variant="body1">
+                                                <Typography
+                                                    variant="body1"
+                                                    key={shelf.id}
+                                                >
                                                     {shelf.name}
                                                 </Typography>
                                             );
