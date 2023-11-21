@@ -26,6 +26,7 @@ import { Moving } from "./components/Warehouse/Moving";
 import { Komax } from "./components/Komax/Komax";
 import { MachineProvider } from "./context/MachineContext";
 import { FeedingOperator } from "./components/Feeding/FeedingOperator";
+import { Feeding } from "./components/Feeding/Feeding";
 
 function App() {
     return (
@@ -41,7 +42,11 @@ function App() {
                         path="/warehouse/acceptance"
                         element={<Acceptance />}
                     />
-                    <Route path="/feeding/buffer" element={<FeedingBuffer />} />
+                    <Route path="/feeding_stock" element={<Feeding />} />
+                    <Route
+                        path="/feeding_stock/buffer"
+                        element={<FeedingBuffer />}
+                    />
                     <Route path="/users" element={<Users />} />
                     <Route path="/users/new" element={<NewUser />} />
                     <Route path="/suppliers" element={<Suppliers />} />

@@ -8,7 +8,7 @@ import { FeedingSearch } from "./FeedingSearch";
 export const FeedingOperator = () => {
     return (
         <>
-            <Typography variant="h4" sx={{ mb: 4 }}>
+            <Typography variant="h4" sx={{ mb: 4 }} fontWeight="bold">
                 Зона фидинга
             </Typography>
             <Stack direction="row" spacing={3}>

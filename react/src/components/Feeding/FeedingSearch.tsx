@@ -25,7 +25,7 @@ export const FeedingSearch = () => {
             </Typography>
             <Divider />
             <Stack spacing={1} sx={{ mt: 2 }}>
-                <TextField label="Введите искомый материал" size="small" />
+                <TextField label="Введите номер материала" size="small" />
                 <Box>
                     <Button type="submit" variant="contained">
                         Искать

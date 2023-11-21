@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\OrderFeedingController;
+use App\Http\Controllers\RelatshipWireStorageBinController;
 use App\Http\Controllers\StorageBinController;
 use App\Http\Controllers\StorageBinFeedingController;
 use App\Http\Controllers\StorageBinFeedingListController;
@@ -62,4 +63,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("orders_feeding_machine", [OrderFeedingController::class, 'orders_machine']);
     Route::get("orders_feeding", [OrderFeedingController::class, 'index']);
     Route::delete("delete_order_feeding", [OrderFeedingController::class, 'delete']);
+    Route::post("/create_wire_feeding", [RelatshipWireStorageBinController::class, 'create']);
+    Route::get("/wires_feeding", [RelatshipWireStorageBinController::class, 'index']);
 });
