@@ -58,7 +58,7 @@ export const Suppliers = () => {
     }, []);
     return (
         <>
-            {suppliers.length ? (
+            {suppliers ? (
                 <Paper sx={{ p: 4 }}>
                     <Box
                         sx={{

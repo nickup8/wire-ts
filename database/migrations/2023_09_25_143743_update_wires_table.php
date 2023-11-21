@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('wires', function (Blueprint $table) {
-            $table->integer('hu')->unique()->change();
+            $table->integer('hu')->change();
         });
     }
 };

@@ -51,7 +51,7 @@ export const Invoices = () => {
     }, []);
     return (
         <>
-            {invoices.length ? (
+            {invoices ? (
                 <Paper sx={{ p: 4 }}>
                     <Box
                         sx={{

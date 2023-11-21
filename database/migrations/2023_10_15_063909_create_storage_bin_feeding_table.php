@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("shelf_to");
             $table->integer("level_from");
             $table->integer("level_to");
-            $table->integer("komax_id")->nullable();
+            $table->integer("komax_id")->default(0);
             $table->timestamps();
         });
     }
